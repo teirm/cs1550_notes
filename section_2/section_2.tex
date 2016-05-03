@@ -1,0 +1,90 @@
+\documentclass[../base_file/cs1550_notes.tex]{subfiles}
+
+\begin{document}
+\chapter{Begin Multiprogramming}
+Or juggling processes
+\section{How to support multiprogramming}
+\textbf{Can I divide RAM?}
+	\begin{itemize}
+	\item A process could access an address that is not in its RAM block
+	\item Protect a block and check?
+	\end{itemize}
+Where is the best place to do checks?  \textbf{Hardware can help perform OS tasks}
+Do I pack tightly in memory?  Many Processes but there are issues with \textbf{dynamic allocation}
+
+\section{A Process's Address Space}
+\textbf{INSERT FIGURE OF ADDRESS SPACE}\\
+All address in range are your process's. None belong to another process.\\
+A large region to support dynamic allocation.\\
+Exclusive Access \textbf(This is not real)
+	\begin{itemize}
+	\item Does not make sense for same reason as dividing RAM -- we don't have enough resources
+   	\item \textbf{The lie of virtual memory}
+	\end{itemize}	
+The OS is a layer between user and resources.  Insert CS0449 Diagram.  We make system calls from userspace
+to kernel space.  All requests for a resources must go through the OS -- you should \textbf{not} be able
+to side step OS.
+	\begin{itemize}
+	\item Hardware provides us with a Partioned Instruction Set (Some for Userspace, Some for Kernel Space)
+	\item Some instructions are safe (add int)
+	\item Some instructions are priveleged (kernel mode) -- Idea of a \textbf{mode bit}
+	\end{itemize}
+If you try a priveleged instruction in user mode, an \textbf{exception} is raised and OS sends a
+\textbf{signal} and terminates the process.\\
+
+Syscalls are mechanistically different than function calls -- mode changes.  Can't jump and link to our
+different address space.\\
+
+A syscall is an interrupt.  In x86 you put a trap in eax.  These are \textbf{software interrupts}. Later
+we will talk about \textbf{hardware interrupts}.\\
+
+\textbf{Interrupt Vector} -- Indexted by ints.  When interrupt occurs, goes to correct index.  Gets
+address (to syscall handler?)\\
+
+\textbf{Syscall table} -- grab new address for code of the syscall\\
+
+OS only needs priveleged mode to change machine state.  Not everything in OS is priveleged.\\
+
+The OS is not the same as other processe.  It does not compete for CPU time.  It does not schedule itself.
+It is basically \textbf{pure overhead}.\\
+
+The OS does not need to exist, but we are afraid a process may misbehave.  As a result, the OS exists out
+of practical necessity.  We don't really want this, but we have code (OS) and it needs resources. However,
+the OS only runs when it needs to: Reacting to events.  This takes time.\\
+
+Think back to CS0447 and assembly.  On a function call, everything had to be returned to the original
+state.  A clean up needed to be done.  Similarly, the OS needs to make room for its code.
+The \textbf{caller context} state will have to be saved and restarted.  \textbf{A context switch}.\\
+
+A syscall does not save context.  \textbf{The OS does it before the syscall}.  Context will be saved it
+to RAM and put at the top of the caller's stack.
+	\begin{itemize}
+	\item Safe
+		\begin{enumerate}
+		\item Code was interrupted (caller) -- can't execute until OS returns
+		\item RAM is a shared resource as a whole -- address space abstraction, pieces of memory are
+			  mine
+		\end{enumerate}
+	\end{itemize}
+We believe that a single context switch is \textbf{optimized}  (from a hardware/software end).  Only
+way to go faster is to have fewer context switches.  If we have two solutions and one uses \textbf{fewer}
+context switches, we will say it goes \textbf{faster}.\\
+
+\textbf{Resources to protect and share:}
+	\begin{itemize}
+	\item CPU Time -- Preemption
+	\item Memory -- Virtual Memory
+	\item I/O -- Spooling
+	\item Security -- \textit{'Tis black magic...' (Cyrus)}
+	\end{itemize}
+\textbf{Memory trade off -- cost, speed, capacity}\\
+
+There are also hardware interrupts.  However the actual action is that of a software interrupt.  Think
+about a \textbf{bus signal}.  It has some basic steps that allow the OS to react.
+
+\section{OS Design Schemes}
+There are two big types of OS Designs: \textbf{Monolithic} and \textbf{Microkernel}
+
+
+
+\end{document}

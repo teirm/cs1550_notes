@@ -1,0 +1,34 @@
+\documentclass[../base_file/cs1550_notes.tex]{subfiles}
+
+\begin{document}
+\chapter{Overview}
+A brief overview of the course.
+\section{Operating Systems Manage Resources and Abstract Details}
+\textbf{Resources: CPU Time, Memory, I/O Devices, Security}
+	\begin{itemize}
+	\item Operating system needs its own resources to make decisions
+	\item A layered structure between request and resources
+	\end{itemize}
+\textbf{Detail Abstraction: Sharing}
+	\begin{itemize}
+	\item device context and method calling
+	\item unifed interface for application devices
+	\item exclusive access \- 1 process on a constrained computer (virtual memory)
+	\end{itemize}
+Different types of OS open up choices in scheduling algorithms, etc depending on load, tasks, resources
+	\begin{itemize}
+	\item Mainframes
+	\item Realtime \- Has dealines on tasks
+		\begin{itemize}
+		\item \textbf{Soft} - (Can miss dealines) A dvd player and its FPS
+		\item \textbf{Hard} - if a deadline is missed, might as well have not tried (nuclear plant auto-pilot)
+		\end{itemize}
+	\item Embedded \- A Car, A linking library to abstract I/O
+	\item Server \- Linux is still a server class OS
+	\end{itemize}
+We will look at medium sized systesm since they are constrained enough so we can't be naive, but they have enough resources so that we can share.\\
+In computer science, often the same problem will be solved, historically, twice - Paradigm shifts\\
+Computer time is expensive\\
+\textbf{Von Neumann Architecture} - data and code occupied a unifed memory.\\
+We will start with so few resources that we can't share.
+\end{document}
