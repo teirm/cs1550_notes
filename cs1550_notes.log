@@ -1,9 +1,9 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Arch Linux) (preloaded format=pdflatex 2015.12.24)  5 MAY 2016 08:47
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Arch Linux) (preloaded format=pdflatex 2015.12.24)  5 MAY 2016 08:46
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**cs1550_notes.tex
-(./cs1550_notes.tex
+**base_file/cs1550_notes.tex
+(./base_file/cs1550_notes.tex
 LaTeX2e <2015/10/01> patch level 2
 Babel <3.9m> and hyphenation patterns for 79 languages loaded.
 (/usr/share/texmf-dist/tex/latex/base/book.cls
@@ -166,7 +166,8 @@ Package: geometry 2010/09/12 v5.6 Page Geometry
 \Gm@layouthoffset=\dimen113
 \Gm@layoutvoffset=\dimen114
 \Gm@dimlist=\toks17
-) (./cs1550_notes.aux)
+)
+No file cs1550_notes.aux.
 \openout1 = `cs1550_notes.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 8.
@@ -185,7 +186,6 @@ LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 8.
 LaTeX Font Info:    ... okay on input line 8.
 \AtBeginShipoutBox=\box26
 Package hyperref Info: Link coloring OFF on input line 8.
-
 (/usr/share/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
 
@@ -197,8 +197,6 @@ Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 LaTeX Info: Redefining \ref on input line 8.
 LaTeX Info: Redefining \pageref on input line 8.
 LaTeX Info: Redefining \nameref on input line 8.
-
-(./cs1550_notes.out) (./cs1550_notes.out)
 \@outlinefile=\write3
 \openout3 = `cs1550_notes.out'.
 
@@ -246,128 +244,32 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 [1
 
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] (./cs1550_notes.toc
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 2.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 2.
-)
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
 \tf@toc=\write4
 \openout4 = `cs1550_notes.toc'.
 
 
-(../section_1/section_1.texpdfTeX warning (ext4): destination with the same ide
-ntifier (name{page.1}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.4 \chapter
-            {Overview} [1
 
-]
-Chapter 1.
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 9.
-(/usr/share/texmf-dist/tex/latex/base/omscmr.fd
-File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
-)
-LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 9.
-) (../section_2/section_2.tex
-[2
+! LaTeX Error: File `../section_1/section_1.tex' not found.
 
-]
-Chapter 2.
+Type X to quit or <RETURN> to proceed,
+or enter new name. (Default extension: tex)
 
-Underfull \hbox (badness 10000) in paragraph at lines 32--34
+Enter file name: 
+! Emergency stop.
+<read *> 
+         
+l.12 \subfile{../section_1/section_1.tex}
+                                          %%Overview^^M
+End of file on the terminal!
 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 35--37
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 38--40
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 41--43
-
- []
-
-[3
-
-]
-Underfull \hbox (badness 10000) in paragraph at lines 44--45
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 46--47
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 48--50
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 51--54
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 55--58
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 69--72
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 80--81
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 89--95
-
- []
-
-[4])
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 15.
- [5]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 15.
- (./cs1550_notes.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 15.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 15.
-Package rerunfilecheck Info: File `cs1550_notes.out' has not changed.
-(rerunfilecheck)             Checksum: EE8B6894C27D8F25BF80348FB19D97F8;613.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 15.
- ) 
+ 
 Here is how much of TeX's memory you used:
- 4790 strings out of 493054
- 71457 string characters out of 6140585
- 158622 words of memory out of 5000000
- 8291 multiletter control sequences out of 15000+600000
- 9806 words of font info for 34 fonts, out of 8000000 for 9000
+ 4716 strings out of 493054
+ 70427 string characters out of 6140585
+ 152523 words of memory out of 5000000
+ 8254 multiletter control sequences out of 15000+600000
+ 7281 words of font info for 26 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 29i,6n,32p,214b,398s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/
-texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texmf-dist/fon
-ts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texmf-dist/fonts/type1/public
-/amsfonts/cm/cmr12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cm
-r17.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsl10.pfb></usr/
-share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-di
-st/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on cs1550_notes.pdf (6 pages, 115100 bytes).
-PDF statistics:
- 116 PDF objects out of 1000 (max. 8388607)
- 99 compressed objects within 1 object stream
- 18 named destinations out of 1000 (max. 500000)
- 73 words of extra memory for PDF output out of 10000 (max. 10000000)
-
+ 29i,6n,32p,206b,339s stack positions out of 5000i,500n,10000p,200000b,80000s
+!  ==> Fatal error occurred, no output PDF file produced!
