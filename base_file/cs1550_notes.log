@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Arch Linux) (preloaded format=pdflatex 2015.12.24)  3 MAY 2016 11:36
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Arch Linux) (preloaded format=pdflatex 2015.12.24)  5 MAY 2016 08:44
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -333,25 +333,30 @@ Underfull \hbox (badness 10000) in paragraph at lines 80--81
 
  []
 
-)
+
+Underfull \hbox (badness 10000) in paragraph at lines 89--95
+
+ []
+
+[4])
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 15.
- [4]
+ [5]
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 15.
  (./cs1550_notes.aux)
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 15.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 15.
 Package rerunfilecheck Info: File `cs1550_notes.out' has not changed.
-(rerunfilecheck)             Checksum: 3A1D3825F4C965302FA8FFE675792CE9;412.
+(rerunfilecheck)             Checksum: EE8B6894C27D8F25BF80348FB19D97F8;613.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 15.
  ) 
 Here is how much of TeX's memory you used:
- 4781 strings out of 493054
- 71318 string characters out of 6140585
- 157619 words of memory out of 5000000
- 8286 multiletter control sequences out of 15000+600000
- 9499 words of font info for 33 fonts, out of 8000000 for 9000
+ 4790 strings out of 493054
+ 71457 string characters out of 6140585
+ 158622 words of memory out of 5000000
+ 8291 multiletter control sequences out of 15000+600000
+ 9806 words of font info for 34 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 29i,6n,32p,214b,396s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 29i,6n,32p,214b,398s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/
 texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texmf-dist/fon
 ts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texmf-dist/fonts/type1/public
@@ -359,10 +364,10 @@ ts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texmf-dist/fonts/type1/public
 r17.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsl10.pfb></usr/
 share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-di
 st/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on cs1550_notes.pdf (5 pages, 111811 bytes).
+Output written on cs1550_notes.pdf (6 pages, 115032 bytes).
 PDF statistics:
- 97 PDF objects out of 1000 (max. 8388607)
- 81 compressed objects within 1 object stream
- 14 named destinations out of 1000 (max. 500000)
- 49 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 116 PDF objects out of 1000 (max. 8388607)
+ 99 compressed objects within 1 object stream
+ 18 named destinations out of 1000 (max. 500000)
+ 73 words of extra memory for PDF output out of 10000 (max. 10000000)
 

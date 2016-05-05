@@ -67,7 +67,7 @@ to RAM and put at the top of the caller's stack.
 		\end{enumerate}
 	\end{itemize}
 We believe that a single context switch is \textbf{optimized}  (from a hardware/software end).  Only
-way to go faster is to have fewer context switches.  If we have two solutions and one uses \textbf{fewer}
+way to go faster is to have fewer context switches. If we have two solutions and one uses \textbf{fewer}
 context switches, we will say it goes \textbf{faster}.\\
 
 \textbf{Resources to protect and share:}
@@ -75,7 +75,7 @@ context switches, we will say it goes \textbf{faster}.\\
 	\item CPU Time -- Preemption
 	\item Memory -- Virtual Memory
 	\item I/O -- Spooling
-	\item Security -- \textit{'Tis black magic...' (Cyrus)}
+	\item Security -- \textit{'Tis black magic\ldots' (Cyrus)}
 	\end{itemize}
 \textbf{Memory trade off -- cost, speed, capacity}\\
 
@@ -85,6 +85,38 @@ about a \textbf{bus signal}.  It has some basic steps that allow the OS to react
 \section{OS Design Schemes}
 There are two big types of OS Designs: \textbf{Monolithic} and \textbf{Microkernel}
 
+\subsection{Monolotic OS}
+INSERT FIGURE HERE\\
+Think about the OS as another application which controls everything.  \textbf{Monolithic Design} is how
+we normally write an application.  In this design, the OS is priveleged.  Consider scheduling: need a 
+data structure, scheduling algorithm.  This is a lot of code.  In a monolithic design all of this can
+be done \textbf{without privelege}!  Priveleged instructions came when you make context switch, set up
+memory space, etc. This low level state is is not doable by unpriveleged instructions.\\
+
+\textbf{In a Monolithic OS:}
+	\begin{itemize}
+	\item Code to maintain scheduler code
+	\item Priveleged code to do context work
+	\end{itemize}
+All of this bundled together in a monolithic OS.
+
+\subsection{Microkernel OS}
+INSERT FIGURE HERE\\
+In comparison, a microkernel OS strives to pare down OS size by extracting unpriveleged code into separate
+processes.  \textbf{Servers} communicate with the microkernel to ge right answer.  The microkernel then
+goes back and acts on it.
+
+\subsection{Which is better?}
+\textbf{It depends}.
+	\begin{itemize}	
+	\item Context Switches: The microkernel makes more context switches.  The monolithic kernel only needs
+			to make 2.
+	\item Code surface: The microkernel has less code -- smaller attack surface.  Also less code is easier
+		    to validate.  Therefore system wide effects are less likely.
+	\item Crashing: When a crash occurs the OS runs last.  In a microkernel if a user server crashes, just
+			need to pick another server.
+	\item Speed: \textbf{A monolithic kernel is FAST}	
+	\end{itemize}
 
 
 \end{document}
