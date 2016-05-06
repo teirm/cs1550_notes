@@ -1,8 +1,7 @@
 \documentclass[../base_file/cs1550_notes.tex]{subfiles}
 
 \begin{document}
-\chapter{Begin Multiprogramming}
-Or juggling processes
+\chapter{Basics and Terminology}
 \section{How to support multiprogramming}
 \textbf{Can I divide RAM?}
 	\begin{itemize}
@@ -81,7 +80,7 @@ context switches, we will say it goes \textbf{faster}.\\
 
 There are also hardware interrupts.  However the actual action is that of a software interrupt.  Think
 about a \textbf{bus signal}.  It has some basic steps that allow the OS to react.
-
+\pagebreak
 \section{OS Design Schemes}
 There are two big types of OS Designs: \textbf{Monolithic} and \textbf{Microkernel}
 
@@ -119,5 +118,10 @@ goes back and acts on it.
 	\end{itemize}
 Linux is a monolthic kernel.  Windows (NT Line) is a sort of microkernel/monolthic hybrid.
 
+\subsection{Virtual Machines}
+Java has JVM between application and OS\@. Compartively, VMware runs as a guest OS (A different architecture).
+Between hardware - hypervisor.  In all cases there is some notion of \textbf{resource management}.  Virtual
+machines are not a new idea.  They grant exclusive access and as a result came back because they could. We
+now have a lot of resources and can run many more systems.  Think about a webserver.
 
 \end{document}

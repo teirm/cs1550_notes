@@ -8,6 +8,7 @@
 \BOOKMARK [2][-]{subsection.2.3.2}{Microkernel OS}{section.2.3}% 8
 \BOOKMARK [2][-]{subsection.2.3.3}{Which is better?}{section.2.3}% 9
 \BOOKMARK [2][-]{subsection.2.3.4}{Virtual Machines}{section.2.3}% 10
-\BOOKMARK [0][-]{chapter.3}{Scheduling}{}% 11
-\BOOKMARK [1][-]{section.3.1}{Scheduling Basics}{chapter.3}% 12
+\BOOKMARK [0][-]{chapter.3}{Processes}{}% 11
+\BOOKMARK [1][-]{section.3.1}{Handling Processes}{chapter.3}% 12
 \BOOKMARK [1][-]{section.3.2}{How to choose a process}{chapter.3}% 13
+\BOOKMARK [1][-]{section.3.3}{User Threads and Kernel Threads}{chapter.3}% 14

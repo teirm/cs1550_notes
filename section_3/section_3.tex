@@ -1,0 +1,130 @@
+\documentclass[../base_file/cs1550_notes.tex]{subfiles}
+
+\begin{document}
+\chapter{Processes}
+\section{Handling Processes}
+\textbf{Multiprogamming} - a single program will not saturate a CPU\@.  The OS needs
+to decide which process to run.  The CPU seems to only get a continuous stream of
+instructions\@. INSERT FIGURE\@.
+Every time we stop a process we introduce work.  We can do this work during I/O.\\
+
+\textbf{RAM does not get faster with more transistors}.  The improvement is linear
+in speed; however, RAM \textbf{capacity grows exponentially}.\\
+
+\textbf{Ahmdahl's Law} -- Diminishing returns in increasing speed.  I/O is idle process
+time.\\
+
+The hope is to interleave the waits of a process with the runs of another.\\
+
+\textbf{Process} - a running program and its associated data.\\
+
+\textbf{Ready} - A process is ready if it has everything it needs to run except CPU time.\\
+
+\textbf{Pseudo-Parallelism} - Juggling processes.  Blocked means you are just a choice for
+scheduling.\\
+
+In a process life-cycle, a process can leave ready state by calling \textbf{exit()}.  Processor
+time is fast in compared to I/O time.  OS can block (A program is blocked wiating for I/O).  Since
+the program is not ready, it is not a canidate for scheduling.  OS can instead run another process.
+Hardware interrupt will tell OS that a blocked process got resources.  The process then becomes ready.\\
+
+\textbf{Batch System} - The only way to stop a process is to exit().\\
+
+If you choose to block, you are vulnerable to programs taht neither exit or block.  Consider the following:
+\textit{jump: jmp jump} (infinite loop that does nothing).  Greedy process with CPU time.\\
+
+\textbf{Remember: The OS is not a ready process that is scheduled}.  A greedy process starves even the OS
+from CPU time, but this is tied to the greedy process.\\
+
+One solution is to create an even in the long program -- a \textbf{Syscall}.  Asumes programmer did this
+(\textbf{yield()} syscall for example).  This gives us a \textbf{Cooperative multitasking system} which 
+is not the ultimate goal.  A lot depends on how the process is written.\\
+
+We can't do this in code -- do this in \textbf{hardware internal clock}\@.  A hardware interrupt due to
+a time.\\
+
+Taking a way a resource is called premption. This gives us a \textbf{Preemptive Multitasking System}.
+
+\section{How to choose a process}
+Table or Linked List containing:
+	\begin{multicols}{3}
+	\begin{itemize}
+	\item Process Management
+   		\begin{itemize}
+		\item State
+		\item Priority
+		\item PID
+		\item PPID
+		\item signal handlers
+		\item stats (start time/total CPU usage)
+		\end{itemize}
+	\columnbreak
+	\item File Management
+		\begin{itemize}
+		\item File descriptor
+		\item Root directory
+		\item Current Working Directory
+		\item UID
+		\item GID
+		\end{itemize}
+	\columnbreak
+	\item Memory Management
+		\begin{itemize}
+		\item Page table pointer
+		\item Pointers to text on text stack data
+		\end{itemize}
+	\end{itemize}
+	\end{multicols}
+\textbf{Thread} -- a stream of instructions and associated state\@.  A thread is different than a process if 
+we have more than one of them\@. Tasks can communicate between multiple separate threads (different processes)
+via traditional I/O OS\@.
+
+\section{User Threads and Kernel Threads} 
+pthreads abstracts system threading implementation.\\
+\textbf{Kernel Threading} -- OS knows about threads.\\
+\textbf{User Threading} -- OS knows nothing about threads and only has a process table.\\
+User threading depends upon library -- \textbf{This is not pthreads}\@. Pthreads exists
+regardless of user/kernel threading.\\
+
+If kernel threadign: pthread.create() is a syscall.
+If user threading: library that is linked against\\
+
+Kernel threading costs context switches -- therefore user threading may be faster.\\
+
+\textbf{Synchronization is not the problem right now}\\
+
+Issues with preemption:
+	\begin{itemize}
+	\item in kernel threading we can switch to a new thread or process (schedule)
+	\item in user threading schedule can only choose between between processesses
+			(the greedy thread does not know of preemption -- kernel would have to do it 
+			 and kernel can't see it).  A processes can yield().  It only hurts one 
+			process (The one containing the greedy thread)
+	\item in kernel threading pthread.yield() maybe a NOOP
+	\end{itemize}
+
+In user threading we can customize scheduling decisions.\\
+
+ User Threading - a thread calls scanf and the whole process computation is blocked.
+ However, in kernel threading other threads can keep working.\\
+
+There is the nonblocking I/O or syscall.  It immediately returns and more than likely
+your data is not ready.\\
+
+In the user threading library, scanf can make a different syscall of the nonblocking
+type.  The behavior of this syscall is along the lines of "try again or try again and 
+I'll get it.  This can be in the library.  - the thread table is there so we can 
+simulate "blocking" and switch to a different thread.\\
+
+Examples:\\
+Select() on a file descriptor, checks if the data is ready.\\
+A videogame is drawing state with select and read, in a loop.\\
+
+Select is a unix syscall. In linux there is poll() and epoll().\\
+Between User threading and Kernel threading try to hybridize.  \textbf{Scheduler Activation}
+(upcall) is pure hybrid because the OS is told what to do by process.\\
+
+You need to have kernel threading and link user threading on top (Another hybrid aproach).\\
+More Syscalls? Linux 2.6 had faster kernel threading than Linux 2.4 -- due to a bad
+implementation.
+\end{document}
