@@ -1,0 +1,139 @@
+\documentclass[../base_file/cs1550_notes.tex]{subfiles}
+
+\begin{document}
+\chapter{Scheduling}
+\section{How to pick?}
+Scheduling is the process of choosing which of the \textbf{READY}
+processes/threads get to run next.\\
+
+We can use the CPU intensely or be more I/O bound as a process:
+	\begin{itemize}
+	\item A CPU intensive process is \textbf{cpu bound}
+	\item An I/O bound process will do a burst of CPU work and then
+			I/O
+	\end{itemize}
+Note: Both types of processes can have the same \textbf{wall clock
+run time}\\
+
+If two process are CPU bound back to back, it will take $2t$ where
+$t$ is 1 process time\@.  It is hard/impractical to inerleave two
+CPU bound processes because switching processes is not free\@. If
+you dont switch properly you loose illusion of independent program.\\
+
+A cpu bound program wil llikely get pre-empted often.
+This leads to loosing a processors time due to the switch.
+Running two CPU intesive programs at the "same" time may not be better
+than sequentially running.
+As mentioned above, it is not easy to schedule a bunch of CPU bound
+processes together.\\
+
+In a premptive system, a process can get preempted and end up exiting
+(unlikely) or being blocked (I/O bound block a lot).\\
+
+If the system is careful with the preemption timer, an I/O bound process
+may never see preemption -- it will automatically block because it
+has to do I/O.\\
+
+Can overlap CPU bursts and I/O blocks of two processes.\\
+It only makes sense if I/O bound processes are much greater in number than
+CPU bound processes.
+\textbf{Reasonable: interactive programs tend to be I/O bound.  Amhdahl's Law}.\\
+
+Over time CPUs increase exponentially in speed (See Moore's law..although the 
+quantum limit is rapidly being reached).
+On the other hand, I/O speeds grow linearly.
+As a result, a CPU bound program will in "time" become an I/O bound process
+because we gain the ability to do a lot of computation faster than we can
+read from a disk.\\
+\pagebreak
+\subsection{When to schedule?}
+	\begin{multicols}{2}	
+	\begin{itemize}
+	\item Software
+		\begin{itemize}
+		\item Process Creation
+		\item Process Exit
+		\item Blocked
+		\end{itemize}
+	\columnbreak
+	\item Hardware Interrupts
+		\begin{itemize}
+		\item I/O interrupt
+		\item clock interupt
+		\end{itemize}
+	\end{itemize}
+	\end{multicols}
+
+\subsection{Where to schedule?}
+We assume a \textbf{Von Neumann Architecture} where a process can be prevented
+to run by denying it RAM\@.
+Once a process is in RAM, CPU scheduler picks a process.\\
+
+\subsection{Classes of scheduling}
+\textbf{Admission Schedule} selects jobs to go into RAM\@.
+In an interactive system, this might be the user.\\
+
+If admission scheduler did not do a great job, there is also a \textbf{Memory 
+Scheduler} which can kick out a job from RAM\@.
+The problem is that a process may have made progress before the memory scheudler
+gets to it.
+The process has state that has to be saved.  Therefore the memory scheduler
+will do a "temporary" eviction and hold the state of the process on disk.
+When system is better, the memory scheduler can bring process and its
+state back into RAM.\\
+
+\textbf{CPU scheduling} -- Batch scheduling can be used for non-interactive
+systems for jobs that can run overnight.
+(I like to think of scheduling jobs running on a cluster - Cyrus).
+This type of system can be preemptive.\\
+
+\section{Scheduling Algorithms}
+\subsection{Metrics}
+\textbf{Throughput} -- $Number\ of\ Jobs / Unit\ Time$ or in Frequency (Hz)\\
+\textbf{Turnaround Time} -- Time from job submission to job completion.
+This is \textbf{not} execution time!
+The execution time is the time a process has \textbf{available} to run.\\
+\textbf{Average Turn Around Time} -- Average of all turn around times for a 
+set of jobs.\\
+\textbf{Fairness} -- comparable processes get comparable service\@.
+Of course, comparable is not really defined\@.
+You can be egalitarian and say all processes are created equal\dots but are they?\\
+\textbf{Big-O} -- Asymptotic worst case run time\@.
+The key is that it is \textbf{Asymptotic}.\\
+\textbf{Implementation difficulty} -- we like easy things even if they are only
+close to perfect\@.
+Easy is also relative and hard to define.\\
+
+\subsection{Algorithm 1: First Come, First Serve}
+\begin{center}
+\begin{tabular}{l*{4}{c}r}
+Queue		& 4 & 3 & 6 & 3 & Runtime\\
+			& A & B & C & D & Process\\
+\end{tabular}
+\end{center}
+After FCFS (first come, first serve):\\
+\begin{center}
+\begin{tabular}{l*{4}{c}r}
+Queue		& 4 & 3 & 6 & 3 & Runtime\\
+			& A & B & C & D & Process\\
+\end{tabular}
+\end{center}
+Such change, much wow!
+Also this algorithm is $\mathcal{O}(1)$ -- so yay!\\
+Throughput: $4\ jobs/16\ time = 1/4$\\
+Average turn around: $40/4 = 10$\\
+\begin{center}
+\begin{tabular}{l*{4}{c}r}
+Process		& Completion	& Arrival	& $\bigtriangleup t$\\
+\hline
+A			& 4				& 0			& 4\\
+B			& 7				& 0			& 7\\
+A			& 13			& 0			& 13\\
+D			& 16 			& 0			& 16\\
+\hline
+Sum			&			    &	 		& 40\\
+\end{tabular}
+\end{center}
+No matter what is the schedule, the through put is the same.
+We don't consider reality and delays.
+\end{document}

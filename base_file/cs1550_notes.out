@@ -12,3 +12,11 @@
 \BOOKMARK [1][-]{section.3.1}{Handling Processes}{chapter.3}% 12
 \BOOKMARK [1][-]{section.3.2}{How to choose a process}{chapter.3}% 13
 \BOOKMARK [1][-]{section.3.3}{User Threads and Kernel Threads}{chapter.3}% 14
+\BOOKMARK [0][-]{chapter.4}{Scheduling}{}% 15
+\BOOKMARK [1][-]{section.4.1}{How to pick?}{chapter.4}% 16
+\BOOKMARK [2][-]{subsection.4.1.1}{When to schedule?}{section.4.1}% 17
+\BOOKMARK [2][-]{subsection.4.1.2}{Where to schedule?}{section.4.1}% 18
+\BOOKMARK [2][-]{subsection.4.1.3}{Classes of scheduling}{section.4.1}% 19
+\BOOKMARK [1][-]{section.4.2}{Scheduling Algorithms}{chapter.4}% 20
+\BOOKMARK [2][-]{subsection.4.2.1}{Metrics}{section.4.2}% 21
+\BOOKMARK [2][-]{subsection.4.2.2}{Algorithm 1: First Come, First Serve}{section.4.2}% 22

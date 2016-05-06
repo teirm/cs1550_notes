@@ -12,3 +12,11 @@
 \contentsline {section}{\numberline {3.1}Handling Processes}{6}{section.3.1}
 \contentsline {section}{\numberline {3.2}How to choose a process}{7}{section.3.2}
 \contentsline {section}{\numberline {3.3}User Threads and Kernel Threads}{7}{section.3.3}
+\contentsline {chapter}{\numberline {4}Scheduling}{9}{chapter.4}
+\contentsline {section}{\numberline {4.1}How to pick?}{9}{section.4.1}
+\contentsline {subsection}{\numberline {4.1.1}When to schedule?}{10}{subsection.4.1.1}
+\contentsline {subsection}{\numberline {4.1.2}Where to schedule?}{10}{subsection.4.1.2}
+\contentsline {subsection}{\numberline {4.1.3}Classes of scheduling}{10}{subsection.4.1.3}
+\contentsline {section}{\numberline {4.2}Scheduling Algorithms}{10}{section.4.2}
+\contentsline {subsection}{\numberline {4.2.1}Metrics}{10}{subsection.4.2.1}
+\contentsline {subsection}{\numberline {4.2.2}Algorithm 1: First Come, First Serve}{10}{subsection.4.2.2}
