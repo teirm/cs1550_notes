@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Arch Linux) (preloaded format=pdflatex 2015.12.24)  6 MAY 2016 09:40
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Arch Linux) (preloaded format=pdflatex 2015.12.24)  6 MAY 2016 16:16
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -627,37 +627,128 @@ Underfull \hbox (badness 10000) in paragraph at lines 121--125
 
  []
 
-[10])
+[10]
+Underfull \hbox (badness 10000) in paragraph at lines 137--139
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 140--142
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 143--144
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 153--154
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 162--163
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 175--177
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 178--184
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 185--187
+
+ []
+
+[11]
+Underfull \hbox (badness 10000) in paragraph at lines 193--195
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 196--198
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 220--223
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 224--228
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 241--244
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 245--249
+
+ []
+
+[12]
+Underfull \hbox (badness 10000) in paragraph at lines 250--251
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 252--254
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 255--257
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 258--261
+
+ []
+
+)
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 26.
- [11]
+ [13]
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 26.
  (./cs1550_notes.aux)
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 26.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 26.
 Package rerunfilecheck Info: File `cs1550_notes.out' has not changed.
-(rerunfilecheck)             Checksum: 19D83C63BA7F39F64AC571C9F91EBDB3;1483.
+(rerunfilecheck)             Checksum: B36FA1678D05C07F69B3BE1B91349BA4;1738.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 26.
  ) 
 Here is how much of TeX's memory you used:
- 5526 strings out of 493054
- 80195 string characters out of 6140585
+ 5534 strings out of 493054
+ 80311 string characters out of 6140585
  174412 words of memory out of 5000000
- 8979 multiletter control sequences out of 15000+600000
+ 8982 multiletter control sequences out of 15000+600000
  10934 words of font info for 39 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 29i,7n,32p,219b,420s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 29i,7n,32p,219b,470s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/
 texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texmf-dist/fon
 ts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texmf-dist/fonts/type1/publi
 c/amsfonts/cm/cmr10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/c
 mr12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/
-share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsl10.pfb></usr/share/texmf-di
-st/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-dist/fonts/type1
-/public/amsfonts/cm/cmti10.pfb>
-Output written on cs1550_notes.pdf (12 pages, 145651 bytes).
+share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texmf-dist
+/fonts/type1/public/amsfonts/cm/cmsl10.pfb></usr/share/texmf-dist/fonts/type1/p
+ublic/amsfonts/cm/cmsy10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts
+/cm/cmti10.pfb>
+Output written on cs1550_notes.pdf (14 pages, 169964 bytes).
 PDF statistics:
- 218 PDF objects out of 1000 (max. 8388607)
- 193 compressed objects within 2 object streams
- 37 named destinations out of 1000 (max. 500000)
- 177 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 247 PDF objects out of 1000 (max. 8388607)
+ 218 compressed objects within 3 object streams
+ 42 named destinations out of 1000 (max. 500000)
+ 201 words of extra memory for PDF output out of 10000 (max. 10000000)
 

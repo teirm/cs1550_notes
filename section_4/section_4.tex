@@ -135,5 +135,136 @@ Sum			&			    &	 		& 40\\
 \end{tabular}
 \end{center}
 No matter what is the schedule, the through put is the same.
-We don't consider reality and delays.
+We don't consider reality and delays.\\
+
+In a batch system without premption jobs will run to completion and then another
+is chosen.\\
+
+Calculating turn around time:\\
+\begin{center}
+$Turnaround\ Time\ =\ Finish\ -\ Available$ where $Finish\ =\ Execution\ Time\ +\ Wait$\\
+\end{center}
+So first come, first serve is sort of crappy and boring\@.  The only option is to alter 
+wait time:
+\begin{itemize}
+	\item 1\textsuperscript{st} job has the shortest wait (0 time)
+	\item 2\textsuperscript{nd} job has the least if 1\textsuperscript{st} is min
+\end{itemize}
+This brings us to algorithm two!\\
+
+\subsection{Algorithm 2: Shortest Job First}
+\begin{center}
+\begin{tabular}{l*{4}{c}r}
+Queue		& 3 & 3 & 4 & 6 & Runtime\\
+			& B & D & A & C & Process\\
+\end{tabular}
+\end{center}
+Repeating the previous analysis for average turn around: $35/4$.\\
+\begin{center}
+\begin{tabular}{l*{4}{c}r}
+Process		& Completion	& Arrival	& $\bigtriangleup t$\\
+\hline
+A			& 10			& 0			& 10\\
+B			& 3				& 0			& 3\\
+A			& 6				& 0			& 6\\
+D			& 16 			& 0			& 16\\
+\hline
+Sum			&			    &	 		& 35\\
+\end{tabular}
+\end{center}
+\textbf{There is no better way to lower average turn around time}\@.  This could also be easily
+implemented using a \textbf{minheap} which sorts in $\sim\mathcal{O}(nlog(n))$\\
+
+Imagine a scenario with a long job that will never run if jobs added are always shorter\@. This
+is unfair (a process is starved)\@.  Theoretically this is an impossible thing to determine
+because the \textbf{Halting Problem} says we can't know \textit{a priori} what will be the run time 
+of a general process\@.  However, the history of a program's execution could be used to \textit{predict}
+how long a repeat run will take\@.  Another technique could be to have the user input a time after which
+the OS will kill the process\@.  If you over estimate the run time you loose optimal ATT (but who cares?)\@.\\
+
+\textbf{Interactive Scheduling} impatient users waiting.\\
+\textbf{Response Time} Initiating an even $\rightarrow$ seeing response.\\
+
+\subsection{Algorithm 3: Round Robin Scheduling}
+\begin{center}
+\textit{5 Ready Processes}\\
+$A\ \rightarrow\ B\ \rightarrow\ C\ \rightarrow\ D\ \rightarrow\ E$
+\end{center}
+\textbf{Idea:} Schedule slices of each process in the same order\@.  The time of a slice is a \textbf{Quantum}\@.
+The quantum is the maximum amount of time for operations to run\@.\\
+
+As soon as a process blocks, the scheduler will pick the next process -- \textbf{We are never idle}\@.  As a result
+performance is heavily influenced by the choice of quantum.\\
+
+We want processes to block themselves.
+\begin{itemize}
+\item Dont want to preempt right before a block
+\item Want to accomodate IO bound processes (CPU bound processes are screwed)
+\end{itemize}
+\begin{center}
+$Click\ Button\ |------------\bigtriangleup\ t------------|\ Window Appears$
+\end{center}
+Worst case is $\bigtriangleup\ t * N$\@. Therefore want $Response\ Time\ \propto\ \bigtriangleup\ t * N$\@.  Want
+response time smaller in an interactive system no admission/memory scheduler\@.
+Only can reduce $\bigtriangleup\ t$ in an interactive system\@.\\
+Let $\bigtriangleup\ t\ =\ 1$ and $Context\ Switch\ (CS)\ =\ 1$
+\begin{center}
+Example: $|\bigtriangleup\ t\ |\ CS\ |\bigtriangleup\ t\ |$
+\end{center}
+For every unit of useful work, two time units are needed (1 work, 1 CS)\@. \textbf{50\% CPU over head!}\@. Only way
+to improve is to increase the amount of useful work we do.  This is due to the following relationship:
+\[
+	\frac{Useful\ Work}{Useful\ Work\ +\ CS}
+\]
+
+We are pressured into both minimizing and maximizing $\bigtriangleup\ t$\@.  There is probably no analytical solution,
+but we can use benchmarks which show that a quantum of $\sim20\ - \ 60\ ms$ is adequate\@.  Also assume it is statically
+coded into the program.\\
+
+\textbf{Priority Scheduling} normally a number attached to each process\@.  Think the unix command \textbf{nice}.
+Imagine there are 4 priority levels\@.  A priority 4 job may get 4 times as much attention as a priority 1 job.  One
+implementation of this system is to run the job for a quantum that is 4x as long as priority 1 process.  It may just
+block during this time, so it does not guarantee the priority -- a waste.\\
+
+A better implementation would be to increase the frequency a process appears in the queue -- as long at they are not 
+lumped together (blocking problem again).  One scheme to do this is that every time you run a priority level, go back
+and run all higher priority levels -- avoids lumping together.
+
+\subsection{Other Scheduling Algorithms}
+\begin{itemize}
+\item Shortest Process Next - Shortest Process First to an interactive system
+\item Guaranteed Scheduling
+\item Lottery Scheduling -- random
+\item Fair Share
+\end{itemize}
+
+\textbf{Shortest Process Next:} Proceses run as long as user wants.  Not predictive and seems a little crazy. Instead
+think of a process as a burst of computation.  I/O has a short burst whereas CPU bound has a longer burst.  The bias
+is towards I/O bound.\\
+
+\textbf{Guaranteed Scheduling:} N processes get $1/N$ of the CPU time.  This is done by looking at ratios of time and
+checking if any process is below the $1/N$ guarantee.  This can happen if a process is I/O bound (uses less CPU then
+allotted).  We have a preference for scheduling I/O bound processes sooner.  Do we have to worry about starvation?
+As time passes, a new CPU bound job will eventually fall below $1/N$ if I/O bound processes are constantly being picked.\\
+
+\textbf{Fair share:} Each user gets $1/N$ CPU time\\
+
+\textbf{Lottery Scheduling:} Every process gets lottery tickets.  Guaranteed scheduling has multiple implementations,
+lottery scheduling provides a \textbf{mechanism} by handing out tickets, picking a ticket, and scheduling the winner.\\
+
+\textbf{Guaranteed Scheduling is a Policy} The rules a particular mechanism should follow.  As seen above this can be 
+implemented as just lottery scheduling.\\
+
+We can also do fair share scheduling by lottery scheduling because a shell can be given N tickets that it hands out 
+to processes.  Additionally, priority can also be done by lottery scheduling because a higher priority process can
+be given more tickets.  However, if order is key (round-robin) lottery will not be a good mechanism.\\
+
+\textbf{Real Time systems} have deadlines, either hard or soft.  A scheduling algorithm for real time systems is
+\textbf{Earliest Deadline First}.
+\begin{itemize}
+\item Real Time: how you do homework
+\item The difficulties arises due to dynamicity (think about juggling 5 projects)
+\end{itemize}
+
+What do real OSs do? All attemp to scheduling in $\mathcal{O}(1)$
 \end{document}

@@ -20,3 +20,6 @@
 \contentsline {section}{\numberline {4.2}Scheduling Algorithms}{10}{section.4.2}
 \contentsline {subsection}{\numberline {4.2.1}Metrics}{10}{subsection.4.2.1}
 \contentsline {subsection}{\numberline {4.2.2}Algorithm 1: First Come, First Serve}{10}{subsection.4.2.2}
+\contentsline {subsection}{\numberline {4.2.3}Algorithm 2: Shortest Job First}{11}{subsection.4.2.3}
+\contentsline {subsection}{\numberline {4.2.4}Algorithm 3: Round Robin Scheduling}{12}{subsection.4.2.4}
+\contentsline {subsection}{\numberline {4.2.5}Other Scheduling Algorithms}{12}{subsection.4.2.5}

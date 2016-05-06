@@ -20,3 +20,6 @@
 \BOOKMARK [1][-]{section.4.2}{Scheduling Algorithms}{chapter.4}% 20
 \BOOKMARK [2][-]{subsection.4.2.1}{Metrics}{section.4.2}% 21
 \BOOKMARK [2][-]{subsection.4.2.2}{Algorithm 1: First Come, First Serve}{section.4.2}% 22
+\BOOKMARK [2][-]{subsection.4.2.3}{Algorithm 2: Shortest Job First}{section.4.2}% 23
+\BOOKMARK [2][-]{subsection.4.2.4}{Algorithm 3: Round Robin Scheduling}{section.4.2}% 24
+\BOOKMARK [2][-]{subsection.4.2.5}{Other Scheduling Algorithms}{section.4.2}% 25
