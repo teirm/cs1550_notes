@@ -4,16 +4,33 @@
 \usepackage[margin=1.0in]{geometry}
 \usepackage{multicol}
 \usepackage{amsmath}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{mips}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+	language=Java,
+	aboveskip=3mm,
+	belowskip=3mm,
+	showstringspaces=false,
+	columns=flexible,
+	basicstyle={\small\ttfamily},
+	numbers=none,
+	numberstyle=\tiny\color{gray},
+	keywordstyle=\color{blue},
+	commentstyle=\color{dkgreen},
+	stringstyle=\color{mauve},
+	breaklines=true,
+	breakatwhitespace=true,
+	tabsize=3
+}
 
 \author{Cyrus Ramavarapu}
 \title{CS1550 Fall 2015}
-
-
-
-
-
-
-
 \begin{document}
 \maketitle
 \tableofcontents
@@ -22,5 +39,6 @@
 \subfile{../section_2/section_2.tex} %%Start Multiprogramming, OS Types, VMs
 \subfile{../section_3/section_3.tex} %%Processes
 \subfile{../section_4/section_4.tex} %%Scheduling
+\subfile{../section_5/section_5.tex} %%Interprocess Communication
 
 \end{document}

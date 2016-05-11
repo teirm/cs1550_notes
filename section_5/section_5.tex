@@ -1,0 +1,250 @@
+\documentclass[../base_file/cs1550_notes.tex]{subfiles}
+
+\begin{document}
+\chapter{Interprocess Communication}
+\section{Preliminaries}
+On a single processor system we can run at least two processes.  When we
+have parallelism, it creates its own problems (ie. The Race Condition).\\
+
+\textbf{Note:} \textit{mmap} can be used to share an adress space between
+parent and child processes (See Project 2).\\
+
+Preemption is trigged by a hardware interrupt -- at any machine instruction
+boundary an interrupt can go off (For the more curious look up
+\textbf{precise} and \textbf{inprecise} interrupts.\\
+
+Our job is to find regions of code where race conditions can exist --
+\textbf{critical regions}.\\
+
+\textbf{Example:}\\
+\begin{lstlisting}
+enter_critical_region(); // Mutex or Semaphore?
+	A[tail++] = 20;			
+leave_critical_region(); // Mutex or Semaphore? 
+
+enter_critical_region() {
+	disable_interrupts(); // This is wrong because it can be abused
+						  // It is too coarse..preemption is not the
+						  // real reason for race conditions
+}
+
+leave_critical_region() {
+	enable_interrupts();
+}
+\end{lstlisting}
+
+Imagine good pseudo-parallelism: $A\ \rightarrow\ C\ \rightarrow\ A$.
+C has nothing to do with A's shared data.\\
+
+What we want:\\
+\textbf{Insert Figure Here}\\
+\textbf{Goals:}
+\begin{itemize}
+	\item No two processes should be in CR at the same time
+	\item No assumptions about cpu speed or number of CPUs
+	\item No process outside its critical region may block another
+			process (subtle point)
+	\item No process should have to wait for ever to enter its
+			critical region
+\end{itemize}
+These are the goals of \textit{enter\_critical\_region()} and \textit{leave\_critical\_
+region()}
+\section{Implementation 1: Strict Alternation}
+\textbf{Example:}\\
+\lstset{language=C}
+\begin{lstlisting}
+/* This is from Process A Perspective */
+int turn;
+
+enter_CR() {
+	while(turn != 0); /* Or 1 for Process B */
+}
+
+leave_CR() {
+	turn = 1; /* Or 0 for Process B */
+}
+\end{lstlisting}
+
+This does give us mutual exclusion and is known as \textbf{busy waiting}.  Condition does
+not change unless process leaves CR.\\
+
+\textbf{INSERT FIGURE}\\
+
+\textit{Aside: See priority inversion problem.}\\
+
+Enforced alternation is a problem, so lets modify the above code a bit!\\
+
+\begin{lstlisting}
+locked = 0;
+enter_critical_region() {
+	while(locked);
+	/* There is no notion of possesion and no forced turn 
+	 But this does not work! Since we can be pre-empted 
+	 here. Can salvage the problem via hardware!  	
+	*/	
+	 locked = 1;
+}
+
+leave_critical_region() {
+	locked = 0;
+}
+\end{lstlisting}
+
+\textbf{Hardware Support} can come from a single machine instruction (TSL, XCHG). For
+more information see Tannembaum.  The problem win our previous lock system is preemption
+between test and set.  Can there be a software solution to mutual excluson - Yes...
+\textbf{Peterson's Solution}.
+\newpage
+\section{Peterson's Solution}
+Share a global state with an array of size N for N processes. We will do 2. Consider
+if a process is interested and who requested last.
+
+\begin{lstlisting}
+enter_critical_region(int process) {
+	other = 1 - process;
+	interested[process] = true; /* you are interested */
+	last_request = process; /* without this you have a race condition (live lock) */
+	/* a live lock is when two processes just pass possesion neither doing any work 
+	 the last_request line is needed to break the tie */
+	while (interested[other] == true && last_request == process);
+	/* Conditional asks: Did i make the last request? */
+}
+
+leave_critical_region(int process) {
+	interested[process]= false; /* no longer interested */
+}
+\end{lstlisting}
+Peterson's solution works by exploiting the race condition.  If the last request was
+not me, there was a preemption.  I won if the other process overwrote my variable. I
+made first request if other made last. The key is that enter/leave cr functions are
+user space implementable mutual exclusion [Solves the same problem].
+
+\section{Producer and Consumer Problem}
+Shared buffered of fixed size.  A potential race conditions exists in changing the 
+counter (c++ and c--).
+\lstset{language=[mips]Assembler}
+\begin{lstlisting}
+lw			$t0, 0(Address of Counter)
+addi		$t0, $t0, 1
+#PREMPTION
+sw			$t1, 0(Address of Counter)
+\end{lstlisting}	
+Counter can go from 3 to 4 to 4 as a result.  In x86 one can do INC[counter]. More
+interestingly is the issue of a lost signal.  Consumer runs first -- empty buffer
+and should sleep().  Can be preempted right before we sleep.  Producer runs, makes
+1 , says wake up consumer...but signal is lost since the consumer is awake.  Producer
+fills  buffer, sleeps.  Consumer is scheduled, sleeps.  Both are a sleep and we have
+\textbf{Dead Lock}.\\
+
+Race conditions occur when there is a multiple step update of shared global state.\\
+
+\textbf{How to (maybe) fix this:}\\
+\lstset{language=C}
+\begin{lstlisting}
+/* Consumer */
+enter_critical_region();
+if (counter == 0)
+	sleep();
+leave_critical_region();
+
+/* Producer */
+enter_critical_region();
+if (counter == n)
+	sleep();
+leave_critical_region();
+
+enter_critical_region();
+	counter++;
+leave_critical-region();
+\end{lstlisting}
+\textbf{This is even worse:} guaranteed deadlock (sleep while holding lock) -- condition
+variable. pthread\_cord\_signal will also reacquire mutex.  Instead of blaming sleep() you
+can blame wake().  Keep a memory of wake ups and it becomes a problem in accounting. An
+int can keep track of this.  This gives a \textbf{semaphore}.
+\section{Semaphores}
+Returning to the producer/consumer problem if you are already awake and get a weake up,
+maybe we should keep track of weake ups and sleeps.\\
+If value is positive then wake ups
+without being asleep.  If subtraction yields zero or negative, no one was trying to
+wake up so I should sleep (\textbf{down}).  The negative cardinality of value is
+the number of sleepers.\\
+If value on add is 0 or less, someone should wake up.  This can
+be an arbitrary decision.  The length of queue is the number of negatives. This can be
+thought of as the following conditional:
+\begin{lstlisting}
+if (value <= 0)
+	process = dequeue(process_array);
+wake(process);
+\end{lstlisting}
+Put all of this into an object called a semaphore.  They were invented by Dijkstra.\\
+We can use 3 semaphores to solve producer/consumer problem.
+\begin{itemize}
+	\item empty(n) -- initialized by consumer
+	\item full(0)
+	\item mutex(1)
+\end{itemize}
+
+The mutex is used for mutual exclusion.  Mutex.down and mutex.up surround our CR.
+Initially mutex has 1 -- one missed wakeup.  Start with down -- we start our mutex at 1
+which makes that which runs first enter first.  Mutex.down is a subtraction and a potential
+sleep().  Lets say we get preempted.  Consumer runs -- downs mutex to -1 and sleeps. Producer
+runs again finishes CR ups mutex to 0 and therefore someone wakes up -- the consumer.  Consumer
+can now run.\\
+
+Empty(n) and Full(0) -- the value of a semaphore can be though of as the number of compies
+of a resource we can access simultaneously.  Example lab with 5 printers, first 5 print jobs
+go and the 6th job has to wait.  Empty(n) means I have n empty spaces [empty space is a resource
+consumed by something made].  Producer makes full spaces and consumes empty spaces.  Consumer
+makes empty spaces and consumes full spaces. The interpretation between mutex and our empty
+and full are the same.  Our 1 in mutex is number of access to critical region -- only 1 process
+can access our critical region.\\
+
+Semaphores are tricky -- if you swap mutex lines you get a deadlock:
+\begin{center}
+\begin{multicols}{2}
+mutex.down\\
+empty.down\\
+producer\\
+\columnbreak
+mutex.down\\
+full.down\\
+consumer (start here)\\
+\end{multicols}
+\end{center}
+The result is that we can do mutual exclusion/synchronization without busy waiting.
+
+\subsection{Other synchronization primitives}
+\textbf{Counting semaphore:} A simplified version of a semaphore that can only be locked or unlocked.\\
+\textbf{Binary Semaphore:} Semaphore that only takes the values 0 or 1 (a single bit).  This is not a
+mutex.  The first process to up will wake everyone else up. Also known as a \textbf{barrier}.\\
+\textbf{Monitors:} Automate the process of acquisation of locks and bundle everything into one object.
+Original way to get synchronization in Java (eww) is to make a synchronized method.  A method in Java
+being synchronized has to check lock on object.  For producer/consumer while(true) needs to be outside.\\
+
+There is a unifying bassis for all of our synchronization primitives -- some amount of shared memory and
+uniform access.\\
+
+Not all computers have this (distributed systems).  Own OS, scheduler, etc.  Can't depend on synchronization
+for reading/writing.  Need to tell some how about CR status.  Networks are unreliable.\\
+
+Some solutions to this problem are:
+\begin{itemize}
+	\item Elect a computer the leader.  Shared state is moved from local to shared.
+	\item Have nodes vote if neighbors in critical or if they entered.  Ask only about $\sqrt{n}$
+\end{itemize}
+
+
+
+
+
+\section{Why the fuss?}
+Why are we talking about this in operating systems?  The semaphore can have a race condition
+with itself.  You can't solve this with one huge hardware instruction (CISC instruction). Can't
+wrap this in petersons -- you sleep with lock.  Condition vars can be used, but it is the same
+problem.  The shape of the problem is the same. You can, however, disable interrupts.\\
+
+Move up() and down() into the operating system so it is the OS that is putting processes to sleep.
+In linux you will spinlock (not disable interrupts).  OS code will/should run quickly so spin locking
+is not a problem.  The spin lock is also around a very small amount of code -- a best practice.
+
+\end{document}
