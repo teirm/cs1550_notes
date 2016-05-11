@@ -30,4 +30,5 @@
 \BOOKMARK [1][-]{section.5.4}{Producer and Consumer Problem}{chapter.5}% 30
 \BOOKMARK [1][-]{section.5.5}{Semaphores}{chapter.5}% 31
 \BOOKMARK [2][-]{subsection.5.5.1}{Other synchronization primitives}{section.5.5}% 32
-\BOOKMARK [1][-]{section.5.6}{Why the fuss?}{chapter.5}% 33
+\BOOKMARK [2][-]{subsection.5.5.2}{The dining philosophers problem}{section.5.5}% 33
+\BOOKMARK [1][-]{section.5.6}{Why the fuss?}{chapter.5}% 34

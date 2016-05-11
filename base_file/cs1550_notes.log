@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Arch Linux) (preloaded format=pdflatex 2015.12.24)  11 MAY 2016 19:16
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Arch Linux) (preloaded format=pdflatex 2015.12.24)  11 MAY 2016 19:43
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -882,7 +882,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 227--229
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 241--245
+Underfull \hbox (badness 10000) in paragraph at lines 244--248
 
  []
 
@@ -893,13 +893,20 @@ Package atveryend Info: Empty hook `AfterLastShipout' on input line 44.
  (./cs1550_notes.aux)
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 44.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 44.
-Package rerunfilecheck Info: File `cs1550_notes.out' has not changed.
-(rerunfilecheck)             Checksum: C1ABD136B11315023A822F84A735D2AD;2288.
+
+
+Package rerunfilecheck Warning: File `cs1550_notes.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `cs1550_notes.out':
+(rerunfilecheck)             Before: C1ABD136B11315023A822F84A735D2AD;2288
+(rerunfilecheck)             After:  31BADB22E546A633F2C5F2851E168769;2373.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 44.
  ) 
 Here is how much of TeX's memory you used:
- 8012 strings out of 493054
- 113686 string characters out of 6140585
+ 8013 strings out of 493054
+ 113702 string characters out of 6140585
  266077 words of memory out of 5000000
  11327 multiletter control sequences out of 15000+600000
  11400 words of font info for 41 fonts, out of 8000000 for 9000
@@ -915,10 +922,10 @@ share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texmf-dist
 ublic/amsfonts/cm/cmsy10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts
 /cm/cmti10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb>
 
-Output written on cs1550_notes.pdf (19 pages, 202854 bytes).
+Output written on cs1550_notes.pdf (19 pages, 203231 bytes).
 PDF statistics:
- 409 PDF objects out of 1000 (max. 8388607)
- 373 compressed objects within 4 object streams
- 133 named destinations out of 1000 (max. 500000)
+ 410 PDF objects out of 1000 (max. 8388607)
+ 374 compressed objects within 4 object streams
+ 134 named destinations out of 1000 (max. 500000)
  265 words of extra memory for PDF output out of 10000 (max. 10000000)
 
