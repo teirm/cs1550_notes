@@ -94,7 +94,7 @@ We have the illusion that a process has all the space, thereby side stepping the
 In 32-bit systems, we have a total of $\sim4$ billion addresses and we now have a lot of RAM and can
 therefore achieve a high degree of multiprogramming; however, no matter how much RAM we get this will
 likely always be a problem.
-\section{Begin Paging}
+\section{Paging}
 In overlays the programmer was responsible to play variables in memory in order to keep addressing
 consisten.  This is a problem in \textbf{translation}:
 \begin{center}
@@ -152,6 +152,101 @@ Page Table[0] = 1\\\\
 $1\times 4096\ =\ 4096$\\\\
 \textbf{Problem:}
 The virtual address 4004 also gives same mapping: $\frac{4004}{4096}\ =\ 0$.\\\\
-\textbf{Solution:} Forgot $offset\ =\ virtual\ address\div page\ size$
+\textbf{Solution:} Forgot $offset\ =\ virtual\ address\div page\ size$\\\\
+\textbf{Insert Figure Here}\\\\
+Table size is dependent on resolution of translation so we can track coarser granularity in virtual addresses by
+chunking it as a page in virtual address space.  Physical addresses corresponding to a page frame and 4 Kb pages
+result in a 4 Mb page table.  However, the work to  use the table may be harder now.\\\\
+Looking back at the MMU algorithm, it clearly runs in $\mathcal{O}(1)$ however this is not adequate at the 
+systems level.  From an achitecture point of view we have to do \textit{math}: modulo, division, multiplication.
+If the page size is a power two we can use shift (compiler folks call this a strength reduction) since 4 kb = 
+$2^{12}$.  Shifting right is division and shifting left is multiplication.\\\\
+There is an even better way to do this by taking advantage of the hardware and doing a simple wire trick:
+\textbf{Insert Figure Here}.\\\\
+Although 4 Mb per process is pretty good, can we do better?  If the page table is sparse we can change the data
+structures.  The question is, are all of our page table entries useful?  Also note that that the number of bits 
+for frame number is less than that of the physical address. \textbf{Insert Figure Here}\\\\
+If the valid bit is 1 the page is in RAM\@.  Otherwise, the valid bit is 0 and represents an invalid mapping.  The
+question is are the valid bits mostly 1 or 0?  Since there is no need to map all the freespace between the heap 
+and the stack the answer is \textbf{mostly 0}.  However, we have a lot more pages than page frames.
+\subsection{Page Linked List}
+Nodes \textbf{insert figure here}\\\\
+However have to do a $\mathcal{O}(n)$ every time and every node look up is a memory access -- very expensive work.
+We don't do this.
+\subsection{Binary Page Tree}
+Worst case is $\mathcal{O}(n)$ (degeneration to linked lists).  So we would want a self balancing tree: Red-Black
+Tree, AVL tree, etc.  All you get is $depth\ =\ \mathcal{O}(log(n))$.  What can be done is to fix the tree depth
+because all the numbers in a tree's runtime analysis are a balancing act.\textbf{Insert Figure Here}\\\\
+If the depth is fixed, the branching will increase.  Also note that the root is only used to pick the correct leaf
+node.  Say there are $r$ leaves, we have to get the same functionality as the page table.\\\\
+\textbf{Some Analysis:}\\
+$number\ of\ pages\ =\ r\times l$ where $l$ is the size of a leaf node.\\\\
+\begin{tabular}{l*{3}{c}r}
+$r$ & $l$\\
+\hline\\
+$1$ & $2^{20}$\\
+$2^{20}$ & $1$\\
+\end{tabular}\\
+\textbf{Insert Figure here}\\\\
+$Size\ of\ tree\ =\ Size_{root}\ +\ N\times Size_{leaf}$ where $Size_{root}\ =\ r\times 4$ and $Size_{leaf}\ =\ l\times 4$.\\\\
+What makes this potentially sparse is that few leaves will exist since most page table entries (PTEs) do not have a valid
+bit.  If a there is a single valid entry in a leaf, we have to have the whole leave, however.  If $r\ =\ 1$ and $l\ =\ 2^{20}$
+all would have to be invalid in order to save space (N is either 0 or 1).  We don't do this.  Instead if $r\ =\ 2^{20}$ and
+$l\ =\ 1$, \textbf{insert figurehere}, we just have the page table again (actually worse since there is an additional memory
+access).  So let us compromise with	$r\ =\ 2^{10}$ and $l\ =\ 2^{10}$.  Root will be 4 Kb ($1024\times 2^{2}\ =\ 2^{12}$) and
+leaves will also be 4 Kb.  By saving only two leaves we are smaller than the original page table. \textbf{Insert Figure Here}\\\\
+As a result we need to be able to omit leaves since we have a data structure which does not require that all leaves need to
+always exist.  To omit a leaf all PTEs in the leaf need to be invalid which is 4 Mb of unmapped information. Remember there
+are a lot of free pages between the heap and the stack and we have the assumption of sparseness -- we are not using most
+of our address space. Another issue is that the 4 Mb of invalid entries must be properly alligned to a leaf (4 Mb boundary).
+Another option is to have many more levels to the tree, but this results in more unwanted memory look ups.  (\textit{Aside:
+Address space layout randomization puts offsets at some page size multiple}).
+\subsection{The Future is Now -- 64-bit Architecture}
+\textbf{Insert Figure Here}\\
+\textbf{Insert Figure Here}\\
+\textbf{Insert Figure Here}\\
+\begin{center}
+$\sum Valid\ Pages\ \leq\ Number\ of\ Page\ Frames$
+\end{center}
+Sparseness exists if you look at valid pages compared to total pages -- does not if you are looking at valid pages
+compared to total numbe of page frames -- this is dense.  As a result you only need to have one table across all
+processes because frame numbers are shared across all processes.  This results in an \textbf{inverted page table}.
+This is a move from per process to per system since address are not unique, Questions such as "Whose page 7 does it
+belong to?" are not valid since every process has a page numbered 7, although different processes have different
+information in their page 7.  To identify, need to add PID information.
+\section{Caching}
+Smallest data structure has a prohibitive cost to use (Look back at MMU algorithm). We can't have $\mathcal{O}(n)$
+algorithms at the system level.  However, the trade off between size and speed is bidirectional.  As a result we can
+do \textbf{caching}.  This is not \textbf{THE CACHE}.  In order to save time we can give memory to the problem whenever we
+have locality.  There are two types of locality or nearness/closeness of something:
+\begin{itemize}
+	\item \textbf{Temporal Locality:} You will use things again, so do expensive work once and look it up again
+	\item \textbf{Spatial Locality:} When you visit an element you will probably visit its neighbors
+\end{itemize}
+NEed to show locality in address space in VA and then show it can be exploited in MMU algorithm.  Code has spatial
+temporal locality because it might exist in one page and would have the same frame number. The look up in the MMU
+has temporal locality.  Can we build a cache that is fast and small? Yes--\textbf{Transition Lookaside Buffer (TLB)}.
+\textbf{insert figure here}\\
+\textbf{insert figure here}\\
+Smallness?  Only has to be 16 or 32 entries. The mapping is done as $IPT[Frame\ Number]\ \longmapsto\ (PID,\ Page\ Number)$.
+Why can the cache be so small?  To fill we would at a given instant need 16 to 32 different pages in use and this is a lot
+of information.
+\subsection{Software or Hardware Cache?}
+A 16 entry TLB is something managable by the OS and can be changed during a context switch.  This is \textbf{Software Managed
+Cache}.  A \textbf{Hardware Managed Cache} is handled by the CPU and entries are tagged by the PID\@.  Will have more than 16
+entries and may be polluted with entries from different processes.
+\subsection{Caching Mechanics}
+When something is a in cache that we wanted, we call that a \textbf{hit}.  Otherwise, it is a \textbf{miss}.  When we have a
+TLB miss have to go to IPT and search.  Misses can occur in three different cases.
+\begin{enumerate}
+	\item \textbf{Compulsory:} What if I have never seen a value before?  I have no choice but to find it.
+	\item \textbf{Conflict:} Big caches have to do some indexing and this is likely a hash function.  What we want is gone
+								due to being overwritten.  Can be eliminated in TLB due to size.  Hardware solution is to
+								do parallel comparisons and MUX out the right one.  Known as \textbf{Context Addressable
+								memory}.
+	\item \textbf{Capacity:} Something new comes and overwrites something old -- least recently used.  We have diminishing
+								returns here.  Even at inifinite size we will still have compulsory misses.  
+\end{enumerate}
+Yay! Our inverted page table was not a bad idea! But no one uses this!\textbf{Insert Figure Here}
 
 \end{document}
