@@ -247,6 +247,162 @@ TLB miss have to go to IPT and search.  Misses can occur in three different case
 	\item \textbf{Capacity:} Something new comes and overwrites something old -- least recently used.  We have diminishing
 								returns here.  Even at inifinite size we will still have compulsory misses.  
 \end{enumerate}
-Yay! Our inverted page table was not a bad idea! But no one uses this!\textbf{Insert Figure Here}
-
+Yay! Our inverted page table was not a bad idea! But no one uses this! \textbf{Insert Figure Here}
+What is actually done is we replace each level of the page table with a TLB step.  The TLB still makes sense, but the question
+now is where do we put the TLB\@?  It can actually be fabricated directly on the processor.  This makes it worthwhile even for
+a single level page table.  We are now done with how we convert virtual addresses to physical addresses. (\textit{Aside:  In the
+systems world, $\mathcal{O}(1)$ is really $\mathcal{O}(c)$ for some constant $c$} and this constant can be very relevant).
+\section{Paging Mechanics}
+Let us take a closer look at the page table entry.  \textbf{insert figure here}.  The protection is done in 3 bits for \textbf{read},
+\textbf{write}, \textbf{execute} and exist because we would like to avoid executable code on the stack (buffer overflow).  However,
+there exist \textbf{just in time (JIT) compilers} that heap allocate but it is executable.  For example, /dev/null is not readable but
+is executable.  The \textbf{dirty bit} makes modifications on a page, such as writes (\$sw), by being set to 1.  \textbf{Reference bit}
+starts out at 1 since we want to use it when we bring it into memory.
+\subsection{Page Fault}
+How do we establish a mapping and bring pages into the frames?  A \textbf{page fault} is an exception raised by MMU indicated a requested
+virtual address is not in memory.  When something bad happens in hardware, the hardware will raise an exception for the OS to handle.  If
+there is no page in RAM, may the program did not do anything wrong, hence the page fault.  In order to handle a page fault:
+\begin{enumerate}
+	\item Determine the faulting virtual address
+	\item If the page is invalid, grow stack/heap and segfault on error
+	\item If physical memory is full, choose a frame to evict
+	\item Write frame to be evicted to disk if dirty
+   	\item Load requested page into now empty frame
+\end{enumerate}
+For $2$ the OS will get info from the executable on disk and tells the CPU to try again.  If faulting address is associated with stack
+pointer or heap you have to grow things.  Though the page faulting mechanism, we figure what parts of a program you want to use, this
+is known as \textbf{demand paging}.  The page faults do our subsetting (yay!).\\\\
+As expected, at the beginning of a program there are going to be a lot of page faults because nothing is in RAM at the start and there
+are a lot of compulsory cache misses.  There is a way to avoid the compulsory cache miss -- \textbf{prefetching} and the OS can do
+something similar by \textbf{prepaging} but this is not perfect.  Not all MMU translatable addresses are valid and the OS will catch
+bad addresses and send a \textbf{SIGSEGV} leading to our beloved segfault.  In C if you overun an array you have to index so badly that
+you run into an invalid page.  The virtual memory subsystem will tell you made a mistake.\\\\
+There are only a finite number of frames so we have two options:
+\begin{enumerate}
+	\item Do nothing and wait for RAM to open up for us
+	\item Take a frame and give it to demanded page
+\end{enumerate}
+We don't want to wait and we also don't want to the memory system to make defacto scheduling decisions.  So we now have the challenge
+of deciding which page to evict.  If a page is clean we don't have to make a disk write.  This occurs in two cases:
+\begin{enumerate}
+	\item It is a code portion that won't change
+	\item We wrote it out in a prior eviction
+\end{enumerate}
+There are algorithms for deciding which page to evict.
+\subsection{Algorithm 1: The Optimal Algorithm}
+First consider the worst algorithm: evict every page that I need next would lead to a chain of page faults (the maximum page fault rate).
+To get the best algorithm, just do the opposite and evict the page that I need furthest in the future from where program is currently.
+This may be a page that I will never need again.  This will lead to the minimal page fault rate.  However, to implement this you need
+perfect knowledge of the future (\textit{Aside: or a lot of spice}) and is therefore impossible to implement.  Any implementable algorithm
+is not optimal (OPT).  All other algorithms we will consider will consider the past to predict the future.
+\subsection{Algorithm 2: FIFO}
+Evict page that has been in a frame (RAM) the longest.  Not a great algorithm because OS may have pages from even boot time.  Also have to
+consider that some pages are \textbf{pinned} and not considered for eviction.  A lot of the pages belonging to the OS are pinned.  FIFO
+also lacks a good notion of time.
+\subsection{Algorithm 3: Not Recently Used (NRU)}
+Evict page that is the oldest, preferring pages that are not dirty.
+\begin{center}
+\begin{tabular}{l*{3}{c}r}
+Preference & Referenced & Dirty\\
+\hline
+1 & 0 & 0\\
+2 & 0 & 1\\
+3 & 1 & 0\\
+4 & 1 & 1\\
+\end{tabular}
+\end{center}
+\textbf{Insert Figure Here}\\\\
+If looking at unreferenced pages, there might be a lot, so the algorithm narrows search space by preferring clean pages.  If a page fault
+occurs early in the reset time, every page will look unreferenced.  As a result a page that is in use may get eviceted.  Also, there might
+be hundreds of pages in a given category, in which case the algorithm chooses randomly.
+\subsection{Algorithm 4: Second Chance}
+Combine FIFO with NRU to do a little better.
+\begin{center}
+\begin{tabular}{l*{8}{c}r}
+Ref & Ref & Ref & Not Ref & Ref & Not Ref & Ref & Ref\\
+A & B & C & D & E & F & G & H\\
+0 & 4 & 8 & 15 & 21 & 22 & 29 & 30\\
+\end{tabular}
+\end{center}
+If oldest page (A) is already referenced and then selected by the algorithm, give it a second chance by resetting referenced bit and update
+time.  Process A is then placed at the end of the list with R = 0 and t = 32.  Repeat until eitehr a page to evic is found (D) or you cycle
+back to process A.  The problem is that there is a lot of work to be done in this algorithm, but it is good that it evicts an old unreferenced
+page.  
+\subsection{Algorithm 5: Clock}
+\textbf{Insert Figure Here}\\
+Second chance with a circular queue.  Would set A to unref and update time and then move point to B.  D would still get evicted.
+\subsection{Algorithm 6: Least Recently Used}
+Look to the past to predict future by keeping a time stamp.  To maintaing a queue in LRU order may require a sort/search every once or twice 
+a machine instruction.  Writing a bit however is alright.  If you have time stamps a traversal is needed, but this is also ok. Getting the
+time stamp is trickier to achieve.  Our working definition of time needs to have fine granularity.  Could use number of clock cycles, but a 
+4 GHz processor is too fast for a 32 bit number.  Maybe a 64 bit number?  Writing this code is a problem because it grows the page table size
+and is cost prohibitive.  Software implementation is not practical, so we approximate LRU by makign a compromise on bit size.
+\subsection{Algorithm 7: Aging Scheme}
+Use 8 bits and use R bit.  A refresh does not throw away information.  What is done is to take current R bit and shift logical right them
+into counter and reset R bits.  Our counters keep track of the history.  Eviction is done by removing the page with the smallest counter value.
+The high order bits of a small number are zero.  We use numeric value instead of leading zeros in order to break ties.
+This is a decent approximation to LRU\@.  The 
+main difference is that LRU can look back in time infinitely whereas Aging is limtied to the counter bit width.  Note: there are always n+1 bits
+in the width because the R bit is really the MSB\@.  Won't evict a page if it has just been referenced.
+\subsection{Algorithm 8: Working Set}
+\textbf{Insert Figure Here}\\
+The working set is the set of pages we are currently using.  $W(k,t)$ is the size of the working set at time time $t$ this is a union of pages
+used.  An overlay is a manual redefining of the working set over time.  Demand paging discovers the working set whereas the prepaging tries to
+guess the working set.\\\\
+The working set changes over time, and given the working set a good algorithm would be able to evict pages outside the working set.  We have
+been trying to do this with our other algorithms.  Since the other algorithms do not have an exact idea what you evict they are very conservative.
+If you know what is the working set you can evict the complement of the working set -- everything not in the working set.  On next page fault
+we will have free frames and have no reason to run the eviction algorithm.  However, there is a drawback to kicking out the complement of the
+working set since you loose the ability to get lucky.\\\\
+The working set is dynamic and it not often known apriori.  As a result we have to define a notion of time known as the \textbf{Current Virtual
+Time}.  The length of time we will consider for a reference to be in the working set will be defined as $\tau$.  There is a good figure in the
+Tennenbaum book.
+The notion of evicting a dirty page is not considered since disk writes are very slow.  We can do the writes and searches in parallel.\\\\
+There are several ways we can improve upon the working set algorithm:
+\begin{itemize}
+	\item \textbf{Early Exit} -- search until a page that is clean and older than tau.  Drity pages can be scheduled for write outs as they are
+		discovered.
+	\item If not found, a disk write will eventually complete so we can evict a written out dirty page not in the WS.
+	\item Ideally after writing out we can just evict.  This is more aggressive but reasonable.  Alternatively we can just makre it clean.
+	\item Just pickup where the algorithm left off
+\end{itemize}
+\subsection{Algorithm 9: Working Set Clock}
+Implementing the above changes to the working set algorithm.  Really a hybrid of working set and some other ideas.
+\subsection{Related Stuff}
+\textbf{Belady's Anomaly:}  In a FIFO system an increase to ram may increase page faults.  This occurs if it is simulatable with a stack.\\\\
+The unreasonable effectiveness of cache terminology in memory is because RAM is really a cache.
+\section{Local and Global Allocation}
+In demand paging if we load a new process and see that RAM is full we don't get anything and our page table is empty.  We can scan every
+processes page table or we could use an inverted page table.  How to avoid this?  Allocate a minimum number of frames on the start of a 
+process.  Page replacement will get one of these minimum.  Can't increase this number, a lot of page faults if working set is greater than
+number of frames.  This leads to lots of disk writes and slow down.  If a process does not fit we \textbf{thrash}.  In \textbf{Global
+Allocation} we can put our pages in a frame stolen from another process.  In \textbf{Local Allocation} we replace one of our frames.  The
+main difference is that global allocation allows our working set to grow.  Growing without bound and releasing could be a problem, but the
+working set can also shrink.  Global allocation makes this easy  because another process will just take the frame from you).  If you don't
+want to search or have an IPT, local allocation is done.\\\\
+Creating a process requires frames.  The OS could keep a reserve of empty frames which it collects from exited processes.  OS could observe
+page fault frequency to determine when to grow the working set of a process. \textbf{Insert Figure Here}.\\\\
+If page fault rate is too low can take away frames from a process to get it closer to compulsory page fault frequency.
+\section{Page Sharing}
+The mystery of static/dynamic linking and the mystery of MMAP and the mystery of fork().  How do we clone so fast? (Please don't time fork()).
+Map multiple pages to a single frame, MMAP took a MAP\_SHARED argument.  Portion of parent/child were backed by the same frame in RAM.
+When  you want libc you don't reference libc because someone else did that.  You reference that page with a link loader -- Dynamic Linking.
+\subsection{Fork}
+Fork allows you to make a new process table entry with a new page table that is a duplicate of the parent.  At some point parent/child will
+write and should have exclusive address spaces.  When cloned, mark all pages as READ\_ONLY.  When either the parent or child write to a page
+the OS will realize this and duplicate necessary modified page.  This is known as \textbf{Copy On Write (COW)}.  You might have noticed this
+when working with QEMU and the cow2 file.\\\\
+When a disk write occurs depends upon the algorithm.  Windows keeps a swap file where as unix/linux has a swap partition.  Swap area ca be
+on disk because a lot of the address space is not used.  If we only write out pages that were once in RAM, less disk is requried.  However
+another table needs to be built.
+\section{Other Memory Details}
+\subsection{ID Spaces}
+Lack of address space can lead to a shortage of virtual address.  What is done in this case is to split code and data address space.  Can
+crate two separate address spaces.  Use same address sapce for either code or Data but need to recognize the instruction type.  There is a 
+loss of the ability to create self modifying code.
+\subsection{Segmenation}
+In a 16 bit system can only have 64 Kb. As a result make further devisions beyond ID.  Given an address, contextualize it into a segment.
+Processor allow for segment picking and instructions were relative to a segment (ideas of near and far).  The flat memory model has a single
+segment and is easier to code in.  In 64 bit systems segmentation is essentially gone.  This is a way of presenting a programmable interface
+to a physically realizable memory.
 \end{document}
