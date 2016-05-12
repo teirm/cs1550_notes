@@ -1,0 +1,157 @@
+\documentclass[../base_file/cs1550_notes.tex]{subfiles}
+
+\begin{document}
+\chapter{Memory Management}
+We can think of things we would like memory to be, but RAM is none of these.\
+So why do we need to manage memory? Exclusive access so that every processes
+sees a unified memory.
+\textbf{Insert Picture}
+\section{Fixed Partitions}
+\textbf{Insert Picture}
+How many partitions do we want? Also how large are the partitions going to be
+so that they can hold useful programs?  The more partitions we make the more
+processes can run. The goal is to maximize CPU utilization and it is unlikely
+that a single process can use up all CPU time.  Very CPU bound processes may
+fill RAM with only 1 or 2 partitions; however, most processes are
+not this CPU bound, and therefore we can often run more processes.  The number
+of processes is the \textbf{degree of multiprogramming}.\\\\
+Chop up memory into enough partitions to get the desired degree of multiprogramming.
+A process may be assigned a partition and be in a queue for the partition or there
+could be a single global queue for all the partitions.  With \textbf{multiple queues}
+you may have empty/unused partitions.  With a \textbf{singular queue} you may over
+allocate and waste memory.  There may be a wait -- small in needs gets a lot of space
+and runs a long time may starve processes that need a lot of memory.  Essentially,
+multiple queues lead to external fragmentation whereas a single queue leads to 
+internal fragmentation.
+\subsection{Relocation and Protection}
+Fixed size partitions are still shared between processes and there is nothing currently
+to prevent a process from reading/writing into another processes memory.  When we assign
+a partition, all memory should be within the bounds of the partition.  This is the
+\textbf{Protection Problem}.  There is also the \textbf{Relocation Problem} of moving 
+a process may change locations of instructions and the associated references.\\\\
+You can't use absolute addreses in the relocation problem, but relative addresses are OK\@.
+How common are absolute addresses?  Well every jump and function call is an absolute
+reference and not known at compile/load time.  These problems exist due to the lack of 
+exclusive access.\\\\
+Let us try to fix these two problems for fixed partitions.  
+\begin{itemize}
+	\item Protection
+		\begin{itemize}
+			\item Keep track of partition bounds (min, max or min and size)
+   			\item Need to check any instructions that use addresses\dots.every instruction
+					does a modification (\$PC + 4) on fetch!
+			\item Do checks in CPU because that is where instructions come from.  The OS
+					can't do it because it does not know about addresses. Only the CPU
+					is doing work (run time) and knows addresses.  There are priveleged
+					registers and a need for hardware support
+			\item This is only the solution for partitioned memory
+		\end{itemize}
+	\item Relocation Solution
+		\begin{itemize}
+			\item Never use absolute addressing -- which is actually a possibility
+			\item We we load, rewrite addresses, but this is no fun
+			\item Hardware can add base to absolute address -- the CPU should know partition
+					base
+		\end{itemize}
+\end{itemize}
+\section{Swapping Memory}
+At the end of the day, fixed partitions are dumb.  Much rather have a swapping memory model.\\\\
+\textbf{Insert Figure}\\\\
+Imagine we have a memory scheduler, we can swap process A out to disk via an eviction.  However,
+on restarting process A we want the same execution.  This leads to a \textbf{dynamic relocation
+problem} because process A could return to a different base address.  Protection problem could
+be solved by limit addresses.  Despite these problems, we still like swapping.  Think about
+why the stack and heap grow towards each other.
+\subsection{Allocation Management}
+The stack is not the problem here, instead it is the heap, or the region for dynamic allocations. 
+This is because there is no guarantee on the order of allocation or deallocation.  One solution 
+for heap mangement is to use a \textbf{bitmap}.  However, it takes a lot of space if the chunk
+size is too small and growing the chunk size leads to \textbf{internal fragmentation}.  Commonly
+the chunksize is $\sim4$ Kb.  If the bitmap is sparse, because we used something other than a
+unary number, compression can be an option.\\\\The other option is to use a \textbf{linked list},
+but this can degenerate to be worse than a bitmap; however this rate.  The linked list can be
+stored near the region where the allocation occured.\\\\
+With a linked list there are different algorithms for allocation (think back to CS0449):
+\begin{itemize}
+	\item First Fit
+	\item Quick Fit
+	\item Worst Fit
+	\item Best Fit -- External Fragmentation
+	\item Next Fit -- Avoid rescanning
+\end{itemize}
+In both allocation strategies, \textbf{coalescing memory} is important in order to prevent
+external fragmentation.  A bitmap handles this naturally, whereas a linked list requires some work.
+Despite this overhead, a linked list is considered better than a bitmap.\\\\
+\textbf{Overlays} are hand written dynamic loading of subsets of a program's code and data.  Maybe
+the space given is not large enough and as a result something must be done.  \textbf{Insert Figure}\\
+At any given moment we only use a part of code/data and as a result we can make partial progress. 
+Consider tracing a function, we can start $g$ as soon as $f$ stops.  However, the problem is that
+they might have different globals, heap, and activation record.  So we just swap in? How?  It is hard,
+but does allow for rapid movement from one subset of total needs to another as subsets completes.
+The subsets are overlapping and it can be a programmer's problem.  When I said it is a hard task, it 
+is actually a horrible, tedious task that a computer can do for us.
+We have the illusion that a process has all the space, thereby side stepping the protection problem.\\\\
+In 32-bit systems, we have a total of $\sim4$ billion addresses and we now have a lot of RAM and can
+therefore achieve a high degree of multiprogramming; however, no matter how much RAM we get this will
+likely always be a problem.
+\section{Begin Paging}
+In overlays the programmer was responsible to play variables in memory in order to keep addressing
+consisten.  This is a problem in \textbf{translation}:
+\begin{center}
+$Virtual Address\ \longmapsto\ Physical Address$
+\end{center}
+\subsection{How to Map?}
+One way to map is to use a \textbf{hash function}: $h(x)\ =\ x\ mod\ s$.  By the \textbf{pigeon hole
+principle} we will have collisions and can have two needed resources at a single address. This is 
+\textbf{prescriptive} and tells where something should be.\\\\
+Alternatively, a \textbf{table} or an array can be used and is a \textbf{descriptive} solution 
+so there is no need to worry about solutions.  The mapping is done by: $table[VA]\ \longmapsto\ PA$.
+\subsection{Table Location}
+This can't be done in the OS because  it is not running or does not have access to physical addresses.
+Also the program won't do it for you.  The solution is in hardware. \textbf{insert figure}.  There are
+upto three possible memory accesses per instruction:
+\begin{itemize}
+	\item On Fetch
+	\item Looking through table
+	\item Getting data from memory
+\end{itemize}
+\subsection{Table Size}
+Physical memory may have a limit and physical addresses have a hardware dependent size.  Assume we have
+a 32-bit physical address space.  There is nothing magical about the number 32. The height of our table
+is therefore $2^{32}$ and the width is $2^{2}$ (a block).  This leads to 16 Gb per process\dots which is too much.
+A solution is to reduce data structure size (remember the bitmap?) by reducing the number of elements.
+Here the height is too big.  Divide virtual address space into chunks and move chunk sized things into RAM\@. 
+This is "chunk" is what we call a \textbf{page}.\textbf{insert figure}\\\\
+The page and \textbf{page frame} must be of the same size so that the mapping can be done as:
+$page\_table[page\ number]\ \longmapsto\ frame\ number$.  However, did we succeed in reducing page table size ($h\times w$)
+\begin{center}
+	$w\ =\ 4$ (Still, we will find use for those bits)\\
+	$h\ =\ number\ of\ pages\ =\ \frac{address\ space\ size}{page\ size}$
+\end{center}
+Using $2^{32}$ for the address space size and $2^{2}$ for the page size, the result is now 4 Mb per process.\\\\
+If you have too large of a page size, the degree of multiprogramming is hurt due to less efficient subsetting.
+This leads to the \textbf{cardinal sin}: Data structure size and access time are inversely proportional.  Our 
+solution above suffers from this problem.\\\\
+\newpage
+Consider the \textbf{MMU algorithm}:\\
+Input: Virtual Address, Page Table\\
+Output: Physical Address\\
+Steps:
+\begin{enumerate}
+	\item Virtual Address $\longmapsto$ Page Number
+	\item Page Table[Page Number] $\longmapsto$ Frame Number
+	\item Frame Number $\longmapsto$ Physical Address
+\end{enumerate}
+How to number pages? (0 to number of pages - 1).  Page number is $virtual\ address/page\ size$.\\
+The physical address is $frame\ number\times page\ size$.\\\\
+\textbf{Example:}\\\\
+VA = 4000\\\\
+Page Size = 4096\\\\
+$\frac{4000}{4096}\ =\ 0$\\\\
+Page Table[0] = 1\\\\
+$1\times 4096\ =\ 4096$\\\\
+\textbf{Problem:}
+The virtual address 4004 also gives same mapping: $\frac{4004}{4096}\ =\ 0$.\\\\
+\textbf{Solution:} Forgot $offset\ =\ virtual\ address\div page\ size$
+
+\end{document}
