@@ -32,3 +32,14 @@
 \BOOKMARK [2][-]{subsection.5.5.1}{Other synchronization primitives}{section.5.5}% 32
 \BOOKMARK [2][-]{subsection.5.5.2}{The dining philosophers problem}{section.5.5}% 33
 \BOOKMARK [1][-]{section.5.6}{Why the fuss?}{chapter.5}% 34
+\BOOKMARK [0][-]{chapter.6}{Deadlock}{}% 35
+\BOOKMARK [1][-]{section.6.1}{What is Deadlock}{chapter.6}% 36
+\BOOKMARK [2][-]{subsection.6.1.1}{Necessary and Sufficient Conditions for Dead Lock}{section.6.1}% 37
+\BOOKMARK [1][-]{section.6.2}{Dealing with Deadlocks}{chapter.6}% 38
+\BOOKMARK [2][-]{subsection.6.2.1}{Algorithm 1: Ostrich Algorithm}{section.6.2}% 39
+\BOOKMARK [2][-]{subsection.6.2.2}{Dead Lock Detection}{section.6.2}% 40
+\BOOKMARK [2][-]{subsection.6.2.3}{Deadlock Recovery}{section.6.2}% 41
+\BOOKMARK [2][-]{subsection.6.2.4}{Deadlock Avoidance}{section.6.2}% 42
+\BOOKMARK [2][-]{subsection.6.2.5}{Algorithm 2: Banker's Algorithm}{section.6.2}% 43
+\BOOKMARK [2][-]{subsection.6.2.6}{Deadlock Prevention}{section.6.2}% 44
+\BOOKMARK [1][-]{section.6.3}{And the winner is?}{chapter.6}% 45

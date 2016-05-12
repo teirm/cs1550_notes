@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Arch Linux) (preloaded format=pdflatex 2015.12.24)  11 MAY 2016 19:43
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Arch Linux) (preloaded format=pdflatex 2015.12.24)  11 MAY 2016 22:31
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -401,19 +401,20 @@ LaTeX Info: Redefining \nameref on input line 34.
 ) [1
 
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] (./cs1550_notes.toc)
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] (./cs1550_notes.tocpdfTeX 
+warning (ext4): destination with the same identifier (name{page.1}) has been al
+ready used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.40 ...Dead Lock Detection}{21}{subsection.6.2.2}
+                                                   [1
+
+])
 \tf@toc=\write4
 \openout4 = `cs1550_notes.toc'.
 
 
-(../section_1/section_1.texpdfTeX warning (ext4): destination with the same ide
-ntifier (name{page.1}) has been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.4 \chapter
-            {Overview} [1
-
-]
+(../section_1/section_1.tex [2]
 Chapter 1.
 LaTeX Font Info:    Try loading font information for OMS+cmr on input line 9.
 (/usr/share/texmf-dist/tex/latex/base/omscmr.fd
@@ -422,7 +423,7 @@ File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 9.
 ) (../section_2/section_2.tex
-[2
+[3
 
 ]
 Chapter 2.
@@ -451,7 +452,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 43--44
 
  []
 
-[3
+[4
 
 ]
 Underfull \hbox (badness 10000) in paragraph at lines 45--46
@@ -483,12 +484,12 @@ Underfull \hbox (badness 10000) in paragraph at lines 79--80
 
  []
 
-[4]
+[5]
 Underfull \hbox (badness 10000) in paragraph at lines 88--94
 
  []
 
-) (../section_3/section_3.tex [5]
+) (../section_3/section_3.tex [6]
 Chapter 3.
 
 Underfull \hbox (badness 10000) in paragraph at lines 6--10
@@ -555,7 +556,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 43--45
 
  []
 
-[6
+[7
 
 ]
 Underfull \hbox (badness 10000) in paragraph at lines 83--88
@@ -602,12 +603,12 @@ Underfull \hbox (badness 10000) in paragraph at lines 119--122
 
  []
 
-[7]
+[8]
 Underfull \hbox (badness 10000) in paragraph at lines 123--126
 
  []
 
-) (../section_4/section_4.tex [8]
+) (../section_4/section_4.tex [9]
 Chapter 4.
 
 Underfull \hbox (badness 10000) in paragraph at lines 6--8
@@ -644,7 +645,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 37--41
 
  []
 
-[9
+[10
 
 ]
 Underfull \hbox (badness 10000) in paragraph at lines 68--71
@@ -681,7 +682,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 121--125
 
  []
 
-[10]
+[11]
 Underfull \hbox (badness 10000) in paragraph at lines 137--139
 
  []
@@ -721,7 +722,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 185--187
 
  []
 
-[11]
+[12]
 Underfull \hbox (badness 10000) in paragraph at lines 193--195
 
  []
@@ -751,7 +752,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 245--249
 
  []
 
-[12]
+[13]
 Underfull \hbox (badness 10000) in paragraph at lines 250--251
 
  []
@@ -771,7 +772,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 258--261
 
  []
 
-) (../section_5/section_5.tex [13]
+) (../section_5/section_5.tex [14]
 Chapter 5.
 
 Underfull \hbox (badness 10000) in paragraph at lines 6--8
@@ -803,7 +804,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 36--38
 
  []
 
-[14
+[15
 
 ] (/usr/share/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2015/06/04 1.6 listings language file
@@ -835,7 +836,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 75--76
 
  []
 
-[15]
+[16]
 Underfull \hbox (badness 10000) in paragraph at lines 132--138
 
  []
@@ -850,7 +851,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 141--143
 
  []
 
-[16]
+[17]
 Overfull \hbox (2.85683pt too wide) in paragraph at lines 160--164
 \OT1/cmr/bx/n/10 This is even worse: \OT1/cmr/m/n/10 guar-an-teed dead-lock (sl
 eep while hold-ing lock) -- con-di-tion vari-able. pthread[]cord[]signal
@@ -876,7 +877,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 224--226
 
  []
 
-[17]
+[18]
 Underfull \hbox (badness 10000) in paragraph at lines 227--229
 
  []
@@ -886,13 +887,97 @@ Underfull \hbox (badness 10000) in paragraph at lines 244--248
 
  []
 
+) (../section_6/section_6.tex [19]
+Chapter 6.
+
+Underfull \hbox (badness 10000) in paragraph at lines 6--9
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 20--23
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 24--25
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 39--43
+
+ []
+
+[20
+
+]
+Underfull \hbox (badness 10000) in paragraph at lines 44--47
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 68--71
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 83--87
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 99--102
+
+ []
+
+[21]
+Underfull \hbox (badness 10000) in paragraph at lines 127--135
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 127--135
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 145--158
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 145--158
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 145--158
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 145--158
+
+ []
+
+[22]
+Underfull \hbox (badness 10000) in paragraph at lines 162--165
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 162--165
+
+ []
+
 )
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 44.
- [18]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 44.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 45.
+ [23]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 45.
  (./cs1550_notes.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 44.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 44.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 45.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 45.
 
 
 Package rerunfilecheck Warning: File `cs1550_notes.out' has changed.
@@ -900,32 +985,32 @@ Package rerunfilecheck Warning: File `cs1550_notes.out' has changed.
 (rerunfilecheck)                or use package `bookmark'.
 
 Package rerunfilecheck Info: Checksums for `cs1550_notes.out':
-(rerunfilecheck)             Before: C1ABD136B11315023A822F84A735D2AD;2288
-(rerunfilecheck)             After:  31BADB22E546A633F2C5F2851E168769;2373.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 44.
+(rerunfilecheck)             Before: B039A59EF57FAA8845ACB86259CA49B2;3037
+(rerunfilecheck)             After:  B7FF7F50A1C0C1D10CDE6857583BF70D;3175.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 45.
  ) 
 Here is how much of TeX's memory you used:
- 8013 strings out of 493054
- 113702 string characters out of 6140585
+ 8043 strings out of 493054
+ 114128 string characters out of 6140585
  266077 words of memory out of 5000000
- 11327 multiletter control sequences out of 15000+600000
+ 11337 multiletter control sequences out of 15000+600000
  11400 words of font info for 41 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  29i,7n,50p,229b,1513s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/
 texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texmf-dist/fon
 ts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texmf-dist/fonts/type1/publi
-c/amsfonts/cm/cmr10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/c
-mr12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/
-share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texmf-dist
-/fonts/type1/public/amsfonts/cm/cmsl10.pfb></usr/share/texmf-dist/fonts/type1/p
-ublic/amsfonts/cm/cmsy10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts
-/cm/cmti10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb>
-
-Output written on cs1550_notes.pdf (19 pages, 203231 bytes).
+c/amsfonts/cm/cmmi7.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/c
+mr10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/
+share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texmf-dis
+t/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texmf-dist/fonts/type1/pu
+blic/amsfonts/cm/cmsl10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/
+cm/cmsy10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
+</usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb>
+Output written on cs1550_notes.pdf (24 pages, 223437 bytes).
 PDF statistics:
- 410 PDF objects out of 1000 (max. 8388607)
- 374 compressed objects within 4 object streams
- 134 named destinations out of 1000 (max. 500000)
- 265 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 489 PDF objects out of 1000 (max. 8388607)
+ 446 compressed objects within 5 object streams
+ 150 named destinations out of 1000 (max. 500000)
+ 345 words of extra memory for PDF output out of 10000 (max. 10000000)
 
