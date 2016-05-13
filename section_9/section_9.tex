@@ -1,0 +1,29 @@
+\documentclass[../base_file/cs1550_notes.tex]{subfiles}
+
+\begin{document}
+\chapter{File Systems}
+What is the interface to interact with the file system? Files.
+\section{File System Basics}
+\subsection{Files}
+\textbf{Naming:}
+\begin{itemize}
+	\item Case Sensitive
+	\item Case Insensitive
+	\item Case preserving - when you reference the case you don't care
+\end{itemize}
+Extensions indicate structure, creation, and consumption of a file.\\\\
+\textbf{Metadata}
+\begin{itemize}
+		\item Type
+		\item Creator
+		\item Structure
+\end{itemize}
+In desiging a file system, need to take care of data, metadata, and file
+system structure.  Excetensions can be hard to change and are normally
+hiddent.  Remember, a file is really just an arbitary sequence of bytes 
+(most modern OS).  This was not the case in PalmOS but it was actually
+records in a database.  Could also do craftier things like a tree
+(Databases). As a side note, Oracle will optimize on blank hard drives.\\\\
+\textbf{File Attributes:} are numerous depending on the system.\\\\
+\textbf{File operations:} C file functions such as open, close, seek. 
+\end{document}
