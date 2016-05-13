@@ -26,4 +26,206 @@ records in a database.  Could also do craftier things like a tree
 (Databases). As a side note, Oracle will optimize on blank hard drives.\\\\
 \textbf{File Attributes:} are numerous depending on the system.\\\\
 \textbf{File operations:} C file functions such as open, close, seek. 
+\textbf{Memory Mapped Files:} MMAP can also bring a text file into 
+address space.  You can run out address space, in which case just
+use the page table.  Some is backed by files and not just the
+swap space.\\\\
+\textbf{Directories:}
+Always have one, the \textbf{Root}.  Everything else is just a loose
+organization and names but they must be unique.  The directory is the
+scope for name uniqueness.  This is not just a tree, but a directed
+acylic graph. Please See: https://xkcd.com/981/.  We can have loops.
+Everything is eventually mapped to syscalls.\\\\
+A file system is installed on  single partition.  On power, firmware
+loads the BIOS.  This is a very generic and basic interface.  Which
+to run first?  First disk sectors are MBR which is the code to load
+something.  If there is single partition, may just load the OS.  If
+multiple partitions, may run a boot loader (GRUB).  In each partition
+first sectors are boot block (loads OS).  Rest of partition is ours
+in addition to metadata or freespace management.\\\\
+Just because a disk has a minimal unit of allocation, a file system
+can have one larger.  This is the block.  Not really a variable and
+the idea is to have sectors that comprise a block to be neighbors
+in order to seek less.  If a file a requries only one block, no 
+problem.  If a sfile spans multiple blocks we have a problem.
+\section{File Allocation}
+\subsection{Continuous Allocation}
+Blooks needed are continguous and the common operations include:
+\begin{itemize}
+	\item Appending to the end of the file.  Requires space at end
+		and a seek to the end.
+	\item Creating a file
+	\item Alter file from start (read/write)
+	\item Delete a file
+\end{itemize}
+Sequential reads from the beginning require finding where the file
+exists.  Directories will have an index of the contents and the size
+of the files.  Once found just need to read until done.  Continuous
+allocation is pretty fast here.  A file seek can start at closest
+block, just read from there and the jump to desired location.  Also
+rather fast.\\\\
+Problems arise when trying to create a file.  For example, to make a
+file 5 blocks in size we need 5 \textbf{continguous} blocks.  What if
+we do not have this? External Fragmentation.  If more than one place
+is possible to place 5 blocks we need an algorithm to make the decision
+(See algorithms for malloc).  But this takes time and the problem of 
+external fragmentation is still present.  Appending is another problem
+because a file wil grow and there may not be any space/enough space to
+grow and maintain the continuous guarantee. The solution is to move a 
+neighbor of the current file.\\\\
+Deleting a file is easy since all that needs to be done is mark the
+blocks as a free.\\\\
+Continuous allocation is great for ROM (CD-ROMs), DVD, Blu-Ray, etc. We
+avoid appends and creates here.  We don't necessarily need contigous
+requirement because any block can be useful.
+\subsection{Linked Allocation}
+Any block can be part of a file, but need space to hold node and use a
+bit of the block to store next pointer.  The list will end at some
+sentinel value.  Since our nearness guarantee we may need a disk
+arm seek.  However, we don't know how much movement will be necessary,
+but we can use a bitmap to do a mapping.  Instead of waiting for free
+space we just forcibly move.  This is just a consequence of a linked
+file system and is a really expensive operation.  What we can do is 
+wish a lot and  be hopeful that we don't need large seeks.  If not
+the case, you have to know node $n-1$ before node $n$ and therefore
+have to seek to $n-1$ before $n$.
+\subsection{File Allocation Table}
+Don't want file and linkage data to be in the same place.  Blocks
+will usually contain only data and the linkage is extracted and put 
+into a large table. This is still an $\mathcal{O}(n)$ process, but
+the real time is much faster.  Append operations can also be sped
+up by storing the end point.  A problem is the existence of this table
+because we do not want to constantly recreate.   As a result, it is
+made when the file system is formatted.  Also there are two copies:
+RAM and DISK.  Which is more important?  There is also a synchronization
+issue here.  In the end, the disk copy is more important because
+no semaphore will protect you from a system failure.  So we write
+to the disk first.
+\section{File System Tree}
+A better (on average) data structure for our disk blocks is a tree.
+Our data will only be in the leaf nodes and others will have pointers.
+this brings us to the idea of an \textbf{I-Node}.  \textbf{Insert Figure
+Here}.\\\\
+The size of a disk block also comes into question.  If it is too large
+we have internal fragmenation.  There is also a minimum of one sector
+per block.  This is just a fact of the type of file system you are 
+using (windows does a good job of telling you this information).  For
+the sake of argument, let the block size be 4 Kb or $2^{12}$. This was
+also what was chosen for our page size.  A single write on page eviction.\\\\
+Virtual memory can divorce block size and page size.  Don't write to the
+same partition -- SWAP partition or the SWAP file.\\\\
+We could have a 64 bit file system.  This would give us $2^{3}\ bytes$,
+which leads to:
+\begin{center}
+$\frac{2^{12}\ (4\ Kb)}{2^{3}\ (8\ Bytes)}$
+\end{center}
+If instead we had a 32 bit address:
+\begin{center}
+$2^{32}\times 2^{12}\ =\ 2^{44}$
+\end{center}
+This is 16 Tb.
+We don't ever have the disk size as a variable, not free.  File systems
+come with a predetermined address size, we really have to make our block
+size accomodate this.  So at the end our branching factor is $2^{9}$ and
+the max file size is $2^{9}\times 2^{12}\ =\ 2^{21}$.  This is a bit small
+so \textbf{Insert Figure Here}.  In this tree, the assumption is that
+each block represents one thing and every level is one type.  Now we
+can hold $2^{9}\times 2^{9}\times 2^{12}\ =\ 2^{30}\ =\ 1 Gb$.  Adding
+another level of indirect pointers.  Single level indirect (one level
+from data).  n level indirect (n levels from data).  Given a file of size
+n bytes -- get blocks by:
+\begin{center}
+$\frac{file\_size}{block\_size}\ =\ b^{c}$\\
+
+$c\ =\ \log_b\frac{file\_size}{block\_size}$
+\end{center}
+We have a very shallow, but very wide tree.  Sequential seeks are all really
+same time, but sequential reads are slower.  Tree traversals have become
+disk block traversals.  Given a set of disks requests, you can aggresively
+grab and let the disk arm scheduler handle the motion.\\\\
+\textbf{Insert Figure Here}\\\\
+\subsection{The Unix Fast File System}
+There is a bias towards start of files and a file is 13 different trees.  There
+is a root, inodes, and 10 direct pointers.  This is the first 40 Kb.  Beyond
+10 and 11th tree of type single indirect.  12th tree is a doube indirect.  13th
+tree is a triple indirect.  Only the largest files use triple indirect which
+is why the beginning is shallow.
+\section{File Attributes}
+Attributes can be stored in directory at
+creation time along wit the permission bit.  Alternatively, attributes can be
+stored in the inode, but this needs another dis block seek (discontiguous allocation).
+If stored in the directory, a directory entry grows in size.  A real file system
+may have directories using more than 1 disk block.  Seek here.  Have to consider
+the most frequent operation which is the hierarchial resolving of what is in the
+directory. As a result we wwant a compact directory.
+\subsection{Large File Names}
+May not know where directory ends if file name is long, but could keep pointers
+to the strings.  It depends on what is considered to be most important.
+\subsection{Sharing Files}
+A file could live in two directories.  \textbf{Linking} makes it so that the 
+name is stored in a single directory but there exist two references.  The
+question is now does the file go away when it is deleted from one user? Maybe
+we don't delete teh file but keep a count and only delete the file when the
+count is zero.  If on a \textbf{Quota} system, another question is who
+does the file count against?  Could be over quota and not have enough. One
+solution is to have it count against both.\\\\
+The creator of a file has special privelges (chmod) if owner deletes a shared
+where do these go?  Could change the owner prior to deleting.  Also, links are not
+restricted to directories.  We can make cycles such as in one of my special folders.\\\\
+Links can go bad.  For example, \textbf{symbolic link} is just a short cut and 
+is normally stored as only a path.  There is no owner ship on the resource and if 
+the path becomes invalid, the link is broken.
+\section{Disk Space Management}
+This is a battle between disk space utilization and the rate at which data can
+be accessed.  Want to get a block sie that balances this.  \textbf{Free block
+tracking} by a linked list in RAM can be done, but could lead to disk arm
+oscillating back and forth a lot and messy recoveries from deletes.  A bit map
+can get large, but chunking is always an option.
+\section{Back Ups}
+There are two types of back ups that can be done: \textbf{Complete} and \textbf{
+Incremental}.  After a complete back up, an incremental back up will only save
+the changes making it faster and smaller.  Incremental back ups are good
+until you loose a single link in the chain that is being made.  You would then
+have to replay all the tapes (Remember: Magnetic Tape is BACKUP -- RAID IS NOT) to
+rebuild the chain.  Restoration will take a long time.  The best approach is a hybrid
+approach.\\\\
+When doing a back up, can do a \textbf{Logical Dump} or a \textbf{Physical Dump} of the
+file system.  A physical dump starts at sector 0 and give you everything.  A logical
+dump will look at the structure and figure out what is actually used.  It will therefore
+be smaller, but takes more time.\\\\
+Another questions is whether or not to compress the back up.  Compression allows you to
+read more with fewer seeks.  Most algorithms are I/O bound.  The answer is: 
+\textbf{Don't compress file system back ups! A single bit flip and all is lost!}\\\\
+In the case of a crash, need to recover and do \textbf{consistency checking} to 
+detect problems that arise.  For example, during the creation of a file we get a block
+and then the power goes out before we get the block.  We could have double insertion.
+In any case, it should be marked as free because \textbf{the file system structure
+is more important than your data}.  If you get a double free, could have duplicates
+and two people requesting a block could get the same block.  Tannenbaum has great
+pictures for this.
+\section{Making the File System Faster}
+We can cache the file system operations by taking the read blocks and putting them
+in cache.  We can then evict by an LRU policy.  Caching is great for reading but
+for writes not so great because a crash may lead to loss.  There are two types
+of cache:
+\begin{itemize}
+	\item Write Through Cache: cache and then write
+	\item Write Back Cache: write on eviction
+\end{itemize}
+\section{Some Real File Systems}
+The FAT32 System has a disk block pointer size of \textbf{28} (why not?) and tops
+out with a file size of 2TB and has some other limitations.  Everyone can read
+and write to it and has long file name support.  Microsoft put a lot of work into
+backwards compatibility.  FAT32 is still readable by a FAT16 driver.  FAT16 will
+convert long file names into something like "PROG~1".  Interestingly, FAT32 will
+create broken directory entries to store long file names.
+\section{Flash Memory}
+Electronically non volatile and the question is how many bits can be stored
+in a cell.  Flash starts off at ones, program a block the 1s to 0s.  Can't
+program on the cell level.  Importantly, flash will degrade as you write and
+you don't want to use an SSD as swap.  Files taht change even slightly tax the SSD.
+Picking only a few blocks to write to.  We don't want to write to a different
+block because of \textbf{wear leveling}.  Defragmentation of an SSD is at best
+useless on an SSD, but it is a lot of reading and writing which will wear 
+out the drive.  
 \end{document}
